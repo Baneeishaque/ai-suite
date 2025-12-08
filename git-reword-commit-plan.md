@@ -48,6 +48,59 @@ Reword a git commit using a fully automated, non-interactive git rebase process 
 
 4. **Verify clean state** - Run `git diff --quiet` and `git diff --cached --quiet` to confirm working directory and staging area are clean
 
+### Feature Branch Recovery Procedure
+
+When the `main` branch history is rewritten (e.g., via rebase/reword), feature branches based on the old history must be carefully rebased onto the new `main`.
+
+#### 1. Identification & Analysis
+Identify all remote branches that contain the old, now-rewritten commits.
+```bash
+# Find branches containing the old commit hash (before rewrite)
+git branch -r --contains <old-commit-hash>
+```
+
+For each identified branch, analyze its divergence:
+- **Find Merge Base:** `git merge-base <branch> <old-main-tip>`
+- **List Unique Commits:** `git log <branch> ^<old-main-tip> --oneline`
+- **Verify Divergence:** Ensure the branch actually stems from the old history and not an unrelated point.
+
+#### 2. User Confirmation Loop
+**CRITICAL:** Do not batch process. Present each branch individually to the user for confirmation.
+
+**Presentation Format:**
+- **Branch Name:** `origin/feature/branch-name`
+- **Divergence Point:** Commit hash and message where it split from old master.
+- **Commits to Replay:** List of unique commits on the feature branch that need to be moved.
+- **Commits to Drop:** List of commits that exist in the new master (if any) to avoid duplicates.
+
+**Action:** Ask: *"Do you want to proceed with rebasing this branch?"*
+
+#### 3. Sequential Execution
+If confirmed, perform the following steps for the branch:
+
+1.  **Checkout & Track:**
+    ```bash
+    git checkout -b <local-branch-name> origin/<remote-branch-name>
+    ```
+2.  **Rebase onto New Main:**
+    ```bash
+    git rebase main
+    ```
+    *Note: Git is usually smart enough to skip commits that were already applied (the ones we reworded), but watch for conflicts.*
+3.  **Force Push:**
+    ```bash
+    git push origin <local-branch-name> --force
+    ```
+4.  **Cleanup:**
+    Delete the local temporary branch to keep the workspace clean.
+    ```bash
+    git checkout main
+    git branch -D <local-branch-name>
+    ```
+
+#### 4. Final Verification
+After processing all branches, verify the remote state to ensure all feature branches are now compatible with the new `main` tip.
+
 ### Notes
 
 - **git lg alias:** This repository has `git lg` configured as an alias for the pretty-formatted log command used in verification steps
