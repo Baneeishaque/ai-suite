@@ -12,15 +12,17 @@ Reword a git commit using a fully automated, non-interactive git rebase process 
 
 ### Main Steps
 
-4. **Create and verify backup tag** - Execute `TAG_NAME=backup-before-reword-$(date +%s)` to store tag name, then `git tag "$TAG_NAME"` to create tag, then verify with `git rev-parse "$TAG_NAME"` matches `git rev-parse HEAD`
+4. **Draft new commit message** - Inspect the commit using `git show <commit-hash>` and prepare a new message compliant with `AI-Agent-Rules/Git-Commit-Message-rules.md` and `AI-Agent-Rules/Git-Submodule-rules.md`
 
-5.  **Start non-interactive rebase** - Run `GIT_SEQUENCE_EDITOR="sed -i '' 's/^pick <commit-hash>/edit <commit-hash>/'" git rebase -i <commit-hash>^` to automatically change "pick" to "edit" in the todo list; this stops rebase at the target commit without opening an editor
+5. **Create and verify backup tag** - Execute `TAG_NAME=backup-before-reword-$(date +%s)` to store tag name, then `git tag "$TAG_NAME"` to create tag, then verify with `git rev-parse "$TAG_NAME"` matches `git rev-parse HEAD`
 
-6. **Complete rebase with new message** - Execute `git commit --amend -m "<proper commit message>"` to set the new commit message, then `git rebase --continue` to finish rebase
+6.  **Start non-interactive rebase** - Run `GIT_SEQUENCE_EDITOR="sed -i '' 's/^pick <commit-hash>/edit <commit-hash>/'" git rebase -i <commit-hash>^` to automatically change "pick" to "edit" in the todo list; this stops rebase at the target commit without opening an editor
 
-7. **Verify rebase success** - Run `git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -5` to confirm commit message changed and verify new commit hashes
+7. **Complete rebase with new message** - Execute `git commit --amend -m "<proper commit message>"` to set the new commit message, then `git rebase --continue` to finish rebase
 
-8. **Clean up backup tag** - After confirming success, delete the backup tag with `git tag -d "$TAG_NAME"`
+8. **Verify rebase success** - Run `git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -5` to confirm commit message changed and verify new commit hashes
+
+9. **Clean up backup tag** - After confirming success, delete the backup tag with `git tag -d "$TAG_NAME"`
 
 ### Error Handling
 
