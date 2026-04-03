@@ -144,3 +144,7 @@
 [submodule "jakedahn_pomodoro"]
 	path = jakedahn_pomodoro
 	url = https://github.com/jakedahn/pomodoro.git
+
+[submodule "jmagar_claude-homelab"]
+	path = jmagar_claude-homelab
+	url = https://github.com/jmagar/claude-homelab.git
