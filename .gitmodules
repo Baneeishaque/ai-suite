@@ -52,3 +52,7 @@
 [submodule "rickygao_specrate"]
 	path = rickygao_specrate
 	url = https://github.com/rickygao/specrate.git
+
+[submodule "shajith003_awesome-claude-skills"]
+	path = shajith003_awesome-claude-skills
+	url = https://github.com/shajith003/awesome-claude-skills.git
