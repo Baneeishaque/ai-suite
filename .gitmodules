@@ -88,3 +88,7 @@
 [submodule "conorluddy_ios-simulator-skill"]
 	path = conorluddy_ios-simulator-skill
 	url = https://github.com/conorluddy/ios-simulator-skill.git
+
+[submodule "coreyhaines31_marketingskills"]
+	path = coreyhaines31_marketingskills
+	url = https://github.com/coreyhaines31/marketingskills.git
