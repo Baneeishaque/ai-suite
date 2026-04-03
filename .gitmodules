@@ -40,3 +40,7 @@
 [submodule "knot0-com_vibe-testing"]
 	path = knot0-com_vibe-testing
 	url = https://github.com/knot0-com/vibe-testing.git
+
+[submodule "makenotion_claude-code-notion-plugin"]
+	path = makenotion_claude-code-notion-plugin
+	url = https://github.com/makenotion/claude-code-notion-plugin.git
