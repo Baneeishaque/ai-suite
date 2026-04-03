@@ -8,3 +8,7 @@
 [submodule "chadboyda_agent-gtm-skills"]
 	path = chadboyda_agent-gtm-skills
 	url = https://github.com/chadboyda/agent-gtm-skills.git
+
+[submodule "chrisvoncsefalvay_claude-d3js-skill"]
+	path = chrisvoncsefalvay_claude-d3js-skill
+	url = https://github.com/chrisvoncsefalvay/claude-d3js-skill.git
