@@ -120,3 +120,7 @@
 [submodule "gudastudio_skills"]
 	path = gudastudio_skills
 	url = https://github.com/GuDaStudio/skills.git
+
+[submodule "h-h-e_media-center"]
+	path = h-h-e_media-center
+	url = https://github.com/H-H-E/media-center.git
