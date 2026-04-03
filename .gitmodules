@@ -28,3 +28,7 @@
 [submodule "dragon1086_claude-skills"]
 	path = dragon1086_claude-skills
 	url = https://github.com/dragon1086/claude-skills.git
+
+[submodule "google_labs_code_stitch-skills"]
+	path = google_labs_code_stitch-skills
+	url = https://github.com/google-labs-code/stitch-skills.git
