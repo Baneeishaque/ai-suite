@@ -68,3 +68,7 @@
 [submodule "besoeasy_open-skills"]
 	path = besoeasy_open-skills
 	url = https://github.com/besoeasy/open-skills.git
+
+[submodule "besoeasy_skills"]
+	path = besoeasy_skills
+	url = https://github.com/besoeasy/open-skills.git
