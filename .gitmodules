@@ -4,3 +4,7 @@
 [submodule "caopulan_notification-skill"]
 	path = caopulan_notification-skill
 	url = https://github.com/caopulan/Notification-Skill.git
+
+[submodule "chadboyda_agent-gtm-skills"]
+	path = chadboyda_agent-gtm-skills
+	url = https://github.com/chadboyda/agent-gtm-skills.git
