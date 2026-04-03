@@ -12,3 +12,7 @@
 [submodule "chrisvoncsefalvay_claude-d3js-skill"]
 	path = chrisvoncsefalvay_claude-d3js-skill
 	url = https://github.com/chrisvoncsefalvay/claude-d3js-skill.git
+
+[submodule "cloudflare_skills"]
+	path = cloudflare_skills
+	url = https://github.com/cloudflare/skills.git
