@@ -32,3 +32,7 @@
 [submodule "google_labs_code_stitch-skills"]
 	path = google_labs_code_stitch-skills
 	url = https://github.com/google-labs-code/stitch-skills.git
+
+[submodule "huanyu16_agent-skills"]
+	path = huanyu16_agent-skills
+	url = https://github.com/huanyu16/agent-skills.git
