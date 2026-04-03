@@ -56,3 +56,7 @@
 [submodule "shajith003_awesome-claude-skills"]
 	path = shajith003_awesome-claude-skills
 	url = https://github.com/shajith003/awesome-claude-skills.git
+
+[submodule "yzfly_mind-cloning-engineering"]
+	path = yzfly_mind-cloning-engineering
+	url = https://github.com/yzfly/Mind-Cloning-Engineering.git
