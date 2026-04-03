@@ -72,3 +72,7 @@
 [submodule "besoeasy_skills"]
 	path = besoeasy_skills
 	url = https://github.com/besoeasy/open-skills.git
+
+[submodule "browser-use_browser-use"]
+	path = browser-use_browser-use
+	url = https://github.com/browser-use/browser-use.git
