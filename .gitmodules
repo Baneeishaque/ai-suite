@@ -1,0 +1,216 @@
+[submodule "ai-agent-rules"]
+	path = ai-agent-rules
+	url = https://github.com/Baneeishaque/ai-agent-rules.git
+[submodule "caopulan_notification-skill"]
+	path = caopulan_notification-skill
+	url = https://github.com/Baneeishaque/Notification-Skill.git
+[submodule "chadboyda_agent-gtm-skills"]
+	path = chadboyda_agent-gtm-skills
+	url = https://github.com/Baneeishaque/agent-gtm-skills.git
+[submodule "chrisvoncsefalvay_claude-d3js-skill"]
+	path = chrisvoncsefalvay_claude-d3js-skill
+	url = https://github.com/Baneeishaque/claude-d3js-skill.git
+[submodule "cloudflare_skills"]
+	path = cloudflare_skills
+	url = https://github.com/Baneeishaque/skills.git
+[submodule "composiohq_awesome-claude-skills"]
+	path = composiohq_awesome-claude-skills
+	url = https://github.com/Baneeishaque/awesome-claude-skills.git
+[submodule "dotnet_skills"]
+	path = dotnet_skills
+	url = https://github.com/dotnet/skills.git
+[submodule "dragon1086_claude-skills"]
+	path = dragon1086_claude-skills
+	url = https://github.com/Baneeishaque/claude-skills.git
+[submodule "google_labs_code_stitch-skills"]
+	path = google_labs_code_stitch-skills
+	url = https://github.com/Baneeishaque/stitch-skills.git
+[submodule "huanyu16_agent-skills"]
+	path = huanyu16_agent-skills
+	url = https://github.com/Baneeishaque/agent-skills.git
+[submodule "knot0-com_vibe-testing"]
+	path = knot0-com_vibe-testing
+	url = https://github.com/Baneeishaque/vibe-testing.git
+[submodule "makenotion_claude-code-notion-plugin"]
+	path = makenotion_claude-code-notion-plugin
+	url = https://github.com/Baneeishaque/claude-code-notion-plugin.git
+[submodule "obra_the-elements-of-style"]
+	path = obra_the-elements-of-style
+	url = https://github.com/Baneeishaque/the-elements-of-style.git
+[submodule "rickygao_specrate"]
+	path = rickygao_specrate
+	url = https://github.com/Baneeishaque/specrate.git
+[submodule "shajith003_awesome-claude-skills"]
+	path = shajith003_awesome-claude-skills
+	url = https://github.com/Baneeishaque/awesome-claude-skills-1.git
+[submodule "yzfly_mind-cloning-engineering"]
+	path = yzfly_mind-cloning-engineering
+	url = https://github.com/Baneeishaque/Mind-Cloning-Engineering.git
+[submodule "anthropics_skills"]
+	path = anthropics_skills
+	url = https://github.com/anthropics/skills.git
+[submodule "besoeasy_open-skills"]
+	path = besoeasy_open-skills
+	url = https://github.com/Baneeishaque/open-skills.git
+[submodule "browser-use_browser-use"]
+	path = browser-use_browser-use
+	url = https://github.com/browser-use/browser-use.git
+[submodule "ckanner_agent-skills"]
+	path = ckanner_agent-skills
+	url = https://github.com/ckanner/agent-skills.git
+[submodule "coffeefuelbump_csv-data-summarizer-claude-skill"]
+	path = coffeefuelbump_csv-data-summarizer-claude-skill
+	url = https://github.com/coffeefuelbump/csv-data-summarizer-claude-skill.git
+[submodule "conorluddy_ios-simulator-skill"]
+	path = conorluddy_ios-simulator-skill
+	url = https://github.com/conorluddy/ios-simulator-skill.git
+[submodule "coreyhaines31_marketingskills"]
+	path = coreyhaines31_marketingskills
+	url = https://github.com/coreyhaines31/marketingskills.git
+[submodule "fabioc-aloha_spotify-skill"]
+	path = fabioc-aloha_spotify-skill
+	url = https://github.com/fabioc-aloha/spotify-skill.git
+[submodule "fractalmind-ai_agent-manager-skill"]
+	path = fractalmind-ai_agent-manager-skill
+	url = https://github.com/fractalmind-ai/agent-manager-skill.git
+[submodule "frmoretto_stream-coding"]
+	path = frmoretto_stream-coding
+	url = https://github.com/frmoretto/stream-coding.git
+[submodule "github_awesome-copilot"]
+	path = github_awesome-copilot
+	url = https://github.com/github/awesome-copilot.git
+[submodule "gmickel_sheets-cli"]
+	path = gmickel_sheets-cli
+	url = https://github.com/gmickel/sheets-cli.git
+[submodule "gotalab_skillport"]
+	path = gotalab_skillport
+	url = https://github.com/gotalab/skillport.git
+[submodule "gudastudio_skills"]
+	path = gudastudio_skills
+	url = https://github.com/GuDaStudio/skills.git
+[submodule "h-h-e_media-center"]
+	path = h-h-e_media-center
+	url = https://github.com/H-H-E/media-center.git
+[submodule "hacklyc_myagents_skills"]
+	path = hacklyc_myagents_skills
+	url = https://github.com/hAcKlyc/MyAgents_skills.git
+[submodule "heyvincent-ai_agent-skills"]
+	path = heyvincent-ai_agent-skills
+	url = https://github.com/HeyVincent-ai/agent-skills.git
+[submodule "huggingface_skills"]
+	path = huggingface_skills
+	url = https://github.com/huggingface/skills.git
+[submodule "ibelick_ui-skills"]
+	path = ibelick_ui-skills
+	url = https://github.com/ibelick/ui-skills.git
+[submodule "jakedahn_pomodoro"]
+	path = jakedahn_pomodoro
+	url = https://github.com/jakedahn/pomodoro.git
+[submodule "jmagar_claude-homelab"]
+	path = jmagar_claude-homelab
+	url = https://github.com/jmagar/claude-homelab.git
+[submodule "kukapay_crypto-skills"]
+	path = kukapay_crypto-skills
+	url = https://github.com/kukapay/crypto-skills.git
+[submodule "lackeyjb_playwright-skill"]
+	path = lackeyjb_playwright-skill
+	url = https://github.com/lackeyjb/playwright-skill.git
+[submodule "ljt-520_openclaw-backup"]
+	path = ljt-520_openclaw-backup
+	url = https://github.com/LJT-520/openClaw-backup.git
+[submodule "mattpocock_skills"]
+	path = mattpocock_skills
+	url = https://github.com/mattpocock/skills.git
+[submodule "mhattingpete_claude-skills-marketplace"]
+	path = mhattingpete_claude-skills-marketplace
+	url = https://github.com/mhattingpete/claude-skills-marketplace.git
+[submodule "microsoft_github-copilot-for-azure"]
+	path = microsoft_github-copilot-for-azure
+	url = https://github.com/microsoft/GitHub-Copilot-for-Azure.git
+[submodule "microsoft_skills"]
+	path = microsoft_skills
+	url = https://github.com/microsoft/skills.git
+[submodule "misteral_claude_plugins"]
+	path = misteral_claude_plugins
+	url = https://github.com/misteral/claude_plugins.git
+[submodule "moizibnyousaf_ai-agent-skills"]
+	path = moizibnyousaf_ai-agent-skills
+	url = https://github.com/MoizIbnYousaf/Ai-Agent-Skills.git
+[submodule "mrgoonie_claudekit-skills"]
+	path = mrgoonie_claudekit-skills
+	url = https://github.com/mrgoonie/claudekit-skills.git
+[submodule "muratcankoylan_agent-skills-for-context-engineering"]
+	path = muratcankoylan_agent-skills-for-context-engineering
+	url = https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering.git
+[submodule "nikitadmitryuk_telegram-media-server"]
+	path = nikitadmitryuk_telegram-media-server
+	url = https://github.com/NikitaDmitryuk/telegram-media-server.git
+[submodule "obra_superpowers"]
+	path = obra_superpowers
+	url = https://github.com/obra/superpowers.git
+[submodule "omidzamani_dspy-skills"]
+	path = omidzamani_dspy-skills
+	url = https://github.com/OmidZamani/dspy-skills.git
+[submodule "openai_skills"]
+	path = openai_skills
+	url = https://github.com/openai/skills.git
+[submodule "openclaw_openclaw"]
+	path = openclaw_openclaw
+	url = https://github.com/openclaw/openclaw.git
+[submodule "product_on_purpose_pm-skills"]
+	path = product_on_purpose_pm-skills
+	url = https://github.com/product-on-purpose/pm-skills.git
+[submodule "redis_agent-skills"]
+	path = redis_agent-skills
+	url = https://github.com/redis/agent-skills.git
+[submodule "riothegreat_ai_agentfund-skill"]
+	path = riothegreat_ai_agentfund-skill
+	url = https://github.com/RioTheGreat-ai/agentfund-skill.git
+[submodule "rmyndharis_antigravity-skills"]
+	path = rmyndharis_antigravity-skills
+	url = https://github.com/rmyndharis/antigravity-skills.git
+[submodule "sammcgrail_seb"]
+	path = sammcgrail_seb
+	url = https://github.com/sammcgrail/seb.git
+[submodule "sanjay3290_ai-skills"]
+	path = sanjay3290_ai-skills
+	url = https://github.com/sanjay3290/ai-skills.git
+[submodule "sanyuan0704_sanyuan-skills"]
+	path = sanyuan0704_sanyuan-skills
+	url = https://github.com/sanyuan0704/sanyuan-skills.git
+[submodule "sawyerhood_dev-browser"]
+	path = sawyerhood_dev-browser
+	url = https://github.com/SawyerHood/dev-browser.git
+[submodule "shepsci_kaggle-skill"]
+	path = shepsci_kaggle-skill
+	url = https://github.com/shepsci/kaggle-skill.git
+[submodule "sickn33_antigravity-awesome-skills"]
+	path = sickn33_antigravity-awesome-skills
+	url = https://github.com/sickn33/antigravity-awesome-skills.git
+[submodule "supabase_agent-skills"]
+	path = supabase_agent-skills
+	url = https://github.com/supabase/agent-skills.git
+[submodule "tavily-ai_skills"]
+	path = tavily-ai_skills
+	url = https://github.com/tavily-ai/skills.git
+[submodule "techgangboss_agentstore"]
+	path = techgangboss_agentstore
+	url = https://github.com/techgangboss/agentstore.git
+[submodule "the-rabak_compound-engineering-plugin"]
+	path = the-rabak_compound-engineering-plugin
+	url = https://github.com/The-Rabak/compound-engineering-plugin.git
+[submodule "vercel-labs_agent-browser"]
+	path = vercel-labs_agent-browser
+	url = https://github.com/vercel-labs/agent-browser.git
+[submodule "vercel-labs_agent-skills"]
+	path = vercel-labs_agent-skills
+	url = https://github.com/vercel-labs/agent-skills.git
+[submodule "vercel-labs_skills"]
+	path = vercel-labs_skills
+	url = https://github.com/vercel-labs/skills.git
+[submodule "wshobson_agents"]
+	path = wshobson_agents
+	url = https://github.com/wshobson/agents.git
+[submodule "zxkane_aws-skills"]
+	path = zxkane_aws-skills
+	url = https://github.com/zxkane/aws-skills.git
