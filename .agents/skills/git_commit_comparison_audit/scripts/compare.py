@@ -18,22 +18,26 @@ def run_git(args, cwd=None):
     except subprocess.CalledProcessError:
         return None
 
-def run_audit(sha, cwd=None):
+def run_audit(sha, root=None):
     """Run the audit.py script and return the output."""
-    try:
+    if root is None:
         root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
-        script_relative = ".agents/skills/git_commit_details_audit/scripts/audit.py"
-        abs_script_path = os.path.join(root, script_relative)
-        
+    
+    skill_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+    script_relative = ".agents/skills/git_commit_details_audit/scripts/audit.py"
+    abs_script_path = os.path.join(skill_root, script_relative)
+    
+    try:
         result = subprocess.run(
             ["python3", abs_script_path, sha],
-            cwd=cwd or root,
+            cwd=root,
             capture_output=True,
             text=True,
             check=True
         )
         return result.stdout.strip()
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError as e:
+        print(f"Error running audit for {sha}: {e.stderr}", file=sys.stderr)
         return None
 
 def parse_audit_output(output):
@@ -94,10 +98,11 @@ def get_pointer_distance(p1, p2, cwd):
         return "Identical Origin/Diverged"
     except: return "Unknown Alignment"
 
-def compare_commits(sha1, sha2):
+def compare_commits(sha1, sha2, root=None):
     """Synthesize the final v2.3 comparison report."""
-    root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
-    r1 = run_audit(sha1); r2 = run_audit(sha2)
+    if root is None:
+        root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
+    r1 = run_audit(sha1, root); r2 = run_audit(sha2, root)
     if not r1 or not r2: return "Error: Failed to orchestrate audits."
     
     d1 = parse_audit_output(r1); d2 = parse_audit_output(r2)
@@ -167,4 +172,5 @@ def compare_commits(sha1, sha2):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3: sys.exit(1)
-    print(compare_commits(sys.argv[1], sys.argv[2]))
+    root = sys.argv[3] if len(sys.argv) > 3 else None
+    print(compare_commits(sys.argv[1], sys.argv[2], root))
