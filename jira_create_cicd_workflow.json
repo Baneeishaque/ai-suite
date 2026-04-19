@@ -1,0 +1,18 @@
+{
+  "additionalAttributes": {
+    "customfield_10020": 379,
+    "customfield_10110": "2026-04-18T19:00:00.000+0530",
+    "priority": {
+      "name": "Low"
+    }
+  },
+  "assignee": "baneeishaque@gmail.com",
+  "projectKey": "OAW",
+  "summary": "Develop & Schedule CI/CD Workflow to update ENFORCED_BUTTON_TYPES according to LegacyButtonType (acer-web)",
+  "type": "Task",
+  "labels": [
+    "acer-web",
+    "ci-cd",
+    "github-actions"
+  ]
+}

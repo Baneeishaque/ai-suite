@@ -1,0 +1,236 @@
+{
+  "changelog": null,
+  "editmeta": null,
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "fields": {
+    "aggregateprogress": {
+      "progress": 0,
+      "total": 0
+    },
+    "aggregatetimeestimate": null,
+    "aggregatetimeoriginalestimate": null,
+    "aggregatetimespent": null,
+    "assignee": {
+      "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+      "accountType": "atlassian",
+      "active": true,
+      "avatarUrls": {
+        "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+      },
+      "displayName": "Banee Ishaque K",
+      "emailAddress": "baneeishaque@gmail.com",
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+      "timeZone": "Asia/Kolkata"
+    },
+    "attachment": [
+      {
+        "author": {
+          "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+          "accountType": "atlassian",
+          "active": true,
+          "avatarUrls": {
+            "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+            "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+            "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+            "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+          },
+          "displayName": "Banee Ishaque K",
+          "emailAddress": "baneeishaque@gmail.com",
+          "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+          "timeZone": "Asia/Kolkata"
+        },
+        "content": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/attachment/content/10690",
+        "created": "2026-04-13T18:07:50.423+0530",
+        "filename": "Screenshot 2026-04-13 at 18.07.38.png",
+        "id": "10690",
+        "mimeType": "image/png",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/attachment/10690",
+        "size": 1020071,
+        "thumbnail": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/attachment/thumbnail/10690"
+      }
+    ],
+    "comment": {
+      "comments": [],
+      "maxResults": 0,
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/14809/comment",
+      "startAt": 0,
+      "total": 0
+    },
+    "components": [],
+    "created": "2026-04-13T18:07:15.527+0530",
+    "creator": {
+      "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+      "accountType": "atlassian",
+      "active": true,
+      "avatarUrls": {
+        "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+      },
+      "displayName": "Banee Ishaque K",
+      "emailAddress": "baneeishaque@gmail.com",
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+      "timeZone": "Asia/Kolkata"
+    },
+    "customfield_10001": null,
+    "customfield_10015": null,
+    "customfield_10016": null,
+    "customfield_10019": "0|i006k7:",
+    "customfield_10020": [
+      {
+        "boardId": 34,
+        "endDate": "2026-04-19T18:00:00.000Z",
+        "goal": "",
+        "id": 379,
+        "name": "Apr. 13 - 19 2026 (Oleovista)",
+        "startDate": "2026-04-12T18:30:53.930Z",
+        "state": "active"
+      }
+    ],
+    "customfield_10021": null,
+    "customfield_10109": null,
+    "customfield_10110": "2026-04-18T19:00:00.000+0530",
+    "customfield_10111": null,
+    "customfield_10112": null,
+    "customfield_10113": null,
+    "customfield_10114": null,
+    "customfield_10115": null,
+    "customfield_10116": null,
+    "description": null,
+    "duedate": "2026-04-18",
+    "environment": null,
+    "fixVersions": [],
+    "issuelinks": [],
+    "issuerestriction": {
+      "issuerestrictions": {},
+      "shouldDisplay": true
+    },
+    "issuetype": {
+      "avatarId": 10318,
+      "description": "Tasks track small, distinct pieces of work.",
+      "entityId": "27a4915b-32f8-4ca3-ab46-d1ccf18dcff3",
+      "hierarchyLevel": 0,
+      "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10318?size=medium",
+      "id": "10041",
+      "name": "Task",
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10041",
+      "subtask": false
+    },
+    "labels": [
+      "acer-web",
+      "components",
+      "design"
+    ],
+    "lastViewed": "2026-04-13T18:15:42.854+0530",
+    "priority": {
+      "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/images/icons/priorities/medium_new.svg",
+      "id": "3",
+      "name": "Medium",
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/priority/3"
+    },
+    "progress": {
+      "progress": 0,
+      "total": 0
+    },
+    "project": {
+      "avatarUrls": {
+        "16x16": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/universal_avatar/view/type/project/avatar/10401?size=xsmall",
+        "24x24": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/universal_avatar/view/type/project/avatar/10401?size=small",
+        "32x32": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/universal_avatar/view/type/project/avatar/10401?size=medium",
+        "48x48": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/universal_avatar/view/type/project/avatar/10401"
+      },
+      "id": "10033",
+      "key": "OAW",
+      "name": "Oleovista Acer Workspace",
+      "projectCategory": {
+        "description": "",
+        "id": "10033",
+        "name": "Contract Works",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/projectCategory/10033"
+      },
+      "projectTypeKey": "software",
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/project/10033",
+      "simplified": true
+    },
+    "reporter": {
+      "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+      "accountType": "atlassian",
+      "active": true,
+      "avatarUrls": {
+        "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+        "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+      },
+      "displayName": "Banee Ishaque K",
+      "emailAddress": "baneeishaque@gmail.com",
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+      "timeZone": "Asia/Kolkata"
+    },
+    "resolution": null,
+    "resolutiondate": null,
+    "security": null,
+    "status": {
+      "description": "",
+      "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/",
+      "id": "10035",
+      "name": "To Do",
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/status/10035",
+      "statusCategory": {
+        "colorName": "blue-gray",
+        "id": 2,
+        "key": "new",
+        "name": "To Do",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/statuscategory/2"
+      }
+    },
+    "statusCategory": {
+      "colorName": "blue-gray",
+      "id": 2,
+      "key": "new",
+      "name": "To Do",
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/statuscategory/2"
+    },
+    "statuscategorychangedate": "2026-04-13T18:07:15.995+0530",
+    "subtasks": [],
+    "summary": "Component Library Documentation on Confluence (Keep Versioned Source Markdowns) (acer-web)",
+    "timeestimate": null,
+    "timeoriginalestimate": null,
+    "timespent": null,
+    "timetracking": {},
+    "updated": "2026-04-13T18:07:50.818+0530",
+    "versions": [],
+    "votes": {
+      "hasVoted": false,
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/OAW-61/votes",
+      "votes": 0
+    },
+    "watches": {
+      "isWatching": true,
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/OAW-61/watchers",
+      "watchCount": 1
+    },
+    "worklog": {
+      "maxResults": 20,
+      "startAt": 0,
+      "total": 0,
+      "worklogs": []
+    },
+    "workratio": -1
+  },
+  "fieldsToInclude": null,
+  "id": "14809",
+  "key": "OAW-61",
+  "names": null,
+  "operations": null,
+  "properties": null,
+  "renderedFields": null,
+  "schema": null,
+  "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/14809",
+  "transitions": null,
+  "versionedRepresentations": null
+}

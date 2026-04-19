@@ -1,0 +1,10 @@
+{
+  "issues": [
+    "OAW-53"
+  ],
+  "additionalAttributes": {
+    "priority": {
+      "name": "Low"
+    }
+  }
+}

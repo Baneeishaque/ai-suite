@@ -1,0 +1,327 @@
+[
+  {
+    "changelog": null,
+    "editmeta": null,
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+    "fields": {
+      "assignee": {
+        "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+        "accountType": "atlassian",
+        "active": true,
+        "avatarUrls": {
+          "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+        },
+        "displayName": "Banee Ishaque K",
+        "emailAddress": "baneeishaque@gmail.com",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+        "timeZone": "Asia/Kolkata"
+      },
+      "issuetype": {
+        "avatarId": 10316,
+        "description": "Subtasks track small pieces of work that are part of a larger task.",
+        "entityId": "903be66b-505a-4a61-96c7-c30daac52cd0",
+        "hierarchyLevel": -1,
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10316?size=medium",
+        "id": "10045",
+        "name": "Subtask",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10045",
+        "subtask": true
+      },
+      "priority": {
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/images/icons/priorities/low_new.svg",
+        "id": "4",
+        "name": "Low",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/priority/4"
+      },
+      "status": {
+        "description": "",
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/",
+        "id": "10035",
+        "name": "To Do",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/status/10035",
+        "statusCategory": {
+          "colorName": "blue-gray",
+          "id": 2,
+          "key": "new",
+          "name": "To Do",
+          "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/statuscategory/2"
+        }
+      },
+      "summary": "Block Password Based Server Access (if everything is Ok)"
+    },
+    "fieldsToInclude": null,
+    "id": "14745",
+    "key": "OAW-51",
+    "names": null,
+    "operations": null,
+    "properties": null,
+    "renderedFields": null,
+    "schema": null,
+    "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/14745",
+    "transitions": null,
+    "versionedRepresentations": null
+  },
+  {
+    "changelog": null,
+    "editmeta": null,
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+    "fields": {
+      "assignee": {
+        "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+        "accountType": "atlassian",
+        "active": true,
+        "avatarUrls": {
+          "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+        },
+        "displayName": "Banee Ishaque K",
+        "emailAddress": "baneeishaque@gmail.com",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+        "timeZone": "Asia/Kolkata"
+      },
+      "issuetype": {
+        "avatarId": 10318,
+        "description": "Tasks track small, distinct pieces of work.",
+        "entityId": "27a4915b-32f8-4ca3-ab46-d1ccf18dcff3",
+        "hierarchyLevel": 0,
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10318?size=medium",
+        "id": "10041",
+        "name": "Task",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10041",
+        "subtask": false
+      },
+      "priority": {
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/images/icons/priorities/medium_new.svg",
+        "id": "3",
+        "name": "Medium",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/priority/3"
+      },
+      "status": {
+        "description": "",
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/",
+        "id": "10035",
+        "name": "To Do",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/status/10035",
+        "statusCategory": {
+          "colorName": "blue-gray",
+          "id": 2,
+          "key": "new",
+          "name": "To Do",
+          "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/statuscategory/2"
+        }
+      },
+      "summary": "Reset Staging Server Credentials"
+    },
+    "fieldsToInclude": null,
+    "id": "14736",
+    "key": "OAW-46",
+    "names": null,
+    "operations": null,
+    "properties": null,
+    "renderedFields": null,
+    "schema": null,
+    "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/14736",
+    "transitions": null,
+    "versionedRepresentations": null
+  },
+  {
+    "changelog": null,
+    "editmeta": null,
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+    "fields": {
+      "assignee": {
+        "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+        "accountType": "atlassian",
+        "active": true,
+        "avatarUrls": {
+          "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+        },
+        "displayName": "Banee Ishaque K",
+        "emailAddress": "baneeishaque@gmail.com",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+        "timeZone": "Asia/Kolkata"
+      },
+      "issuetype": {
+        "avatarId": 10318,
+        "description": "Tasks track small, distinct pieces of work.",
+        "entityId": "27a4915b-32f8-4ca3-ab46-d1ccf18dcff3",
+        "hierarchyLevel": 0,
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10318?size=medium",
+        "id": "10041",
+        "name": "Task",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10041",
+        "subtask": false
+      },
+      "priority": {
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/images/icons/priorities/low_new.svg",
+        "id": "4",
+        "name": "Low",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/priority/4"
+      },
+      "status": {
+        "description": "",
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/",
+        "id": "10035",
+        "name": "To Do",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/status/10035",
+        "statusCategory": {
+          "colorName": "blue-gray",
+          "id": 2,
+          "key": "new",
+          "name": "To Do",
+          "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/statuscategory/2"
+        }
+      },
+      "summary": "Get .env file from Backup (Via. Pinacle) (before Apr. 11 2026 15:00 IST)"
+    },
+    "fieldsToInclude": null,
+    "id": "14733",
+    "key": "OAW-43",
+    "names": null,
+    "operations": null,
+    "properties": null,
+    "renderedFields": null,
+    "schema": null,
+    "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/14733",
+    "transitions": null,
+    "versionedRepresentations": null
+  },
+  {
+    "changelog": null,
+    "editmeta": null,
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+    "fields": {
+      "assignee": {
+        "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+        "accountType": "atlassian",
+        "active": true,
+        "avatarUrls": {
+          "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+        },
+        "displayName": "Banee Ishaque K",
+        "emailAddress": "baneeishaque@gmail.com",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+        "timeZone": "Asia/Kolkata"
+      },
+      "issuetype": {
+        "avatarId": 10316,
+        "description": "Subtasks track small pieces of work that are part of a larger task.",
+        "entityId": "903be66b-505a-4a61-96c7-c30daac52cd0",
+        "hierarchyLevel": -1,
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10316?size=medium",
+        "id": "10045",
+        "name": "Subtask",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10045",
+        "subtask": true
+      },
+      "priority": {
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/images/icons/priorities/medium_new.svg",
+        "id": "3",
+        "name": "Medium",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/priority/3"
+      },
+      "status": {
+        "description": "",
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/",
+        "id": "10035",
+        "name": "To Do",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/status/10035",
+        "statusCategory": {
+          "colorName": "blue-gray",
+          "id": 2,
+          "key": "new",
+          "name": "To Do",
+          "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/statuscategory/2"
+        }
+      },
+      "summary": "Get Staging Server Activity Logs"
+    },
+    "fieldsToInclude": null,
+    "id": "14731",
+    "key": "OAW-42",
+    "names": null,
+    "operations": null,
+    "properties": null,
+    "renderedFields": null,
+    "schema": null,
+    "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/14731",
+    "transitions": null,
+    "versionedRepresentations": null
+  },
+  {
+    "changelog": null,
+    "editmeta": null,
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+    "fields": {
+      "assignee": {
+        "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+        "accountType": "atlassian",
+        "active": true,
+        "avatarUrls": {
+          "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+          "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+        },
+        "displayName": "Banee Ishaque K",
+        "emailAddress": "baneeishaque@gmail.com",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058%3A38820234-7cb2-4799-a242-d90b43affd35",
+        "timeZone": "Asia/Kolkata"
+      },
+      "issuetype": {
+        "avatarId": 10316,
+        "description": "Subtasks track small pieces of work that are part of a larger task.",
+        "entityId": "903be66b-505a-4a61-96c7-c30daac52cd0",
+        "hierarchyLevel": -1,
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10316?size=medium",
+        "id": "10045",
+        "name": "Subtask",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10045",
+        "subtask": true
+      },
+      "priority": {
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/images/icons/priorities/medium_new.svg",
+        "id": "3",
+        "name": "Medium",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/priority/3"
+      },
+      "status": {
+        "description": "",
+        "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/",
+        "id": "10035",
+        "name": "To Do",
+        "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/status/10035",
+        "statusCategory": {
+          "colorName": "blue-gray",
+          "id": 2,
+          "key": "new",
+          "name": "To Do",
+          "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/statuscategory/2"
+        }
+      },
+      "summary": "Get Staging Server Access Logs"
+    },
+    "fieldsToInclude": null,
+    "id": "14729",
+    "key": "OAW-41",
+    "names": null,
+    "operations": null,
+    "properties": null,
+    "renderedFields": null,
+    "schema": null,
+    "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issue/14729",
+    "transitions": null,
+    "versionedRepresentations": null
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "additionalAttributes": {
+    "customfield_10020": 379,
+    "customfield_10110": "2026-04-18T19:00:00.000+0530"
+  },
+  "assignee": "baneeishaque@gmail.com",
+  "projectKey": "OAW",
+  "summary": "Add example .env files to codebase (acer-web)",
+  "type": "Task"
+}

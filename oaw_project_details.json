@@ -1,0 +1,132 @@
+{
+  "archived": null,
+  "archivedBy": null,
+  "archivedDate": null,
+  "assigneeType": "PROJECT_LEAD",
+  "avatarUrls": {
+    "16x16": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/universal_avatar/view/type/project/avatar/10401?size=xsmall",
+    "24x24": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/universal_avatar/view/type/project/avatar/10401?size=small",
+    "32x32": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/universal_avatar/view/type/project/avatar/10401?size=medium",
+    "48x48": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/universal_avatar/view/type/project/avatar/10401"
+  },
+  "components": [],
+  "deleted": null,
+  "deletedBy": null,
+  "deletedDate": null,
+  "description": "",
+  "email": null,
+  "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+  "favourite": null,
+  "id": "10033",
+  "insight": null,
+  "isPrivate": false,
+  "issueTypeHierarchy": null,
+  "issueTypes": [
+    {
+      "avatarId": 10318,
+      "description": "Tasks track small, distinct pieces of work.",
+      "entityId": null,
+      "hierarchyLevel": 0,
+      "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10318?size=medium",
+      "id": "10041",
+      "name": "Task",
+      "scope": null,
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10041",
+      "subtask": false
+    },
+    {
+      "avatarId": 10303,
+      "description": "Bugs track problems or errors.",
+      "entityId": null,
+      "hierarchyLevel": 0,
+      "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+      "id": "10042",
+      "name": "Bug",
+      "scope": null,
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10042",
+      "subtask": false
+    },
+    {
+      "avatarId": 10315,
+      "description": "Stories track functionality or features expressed as user goals.",
+      "entityId": null,
+      "hierarchyLevel": 0,
+      "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10315?size=medium",
+      "id": "10043",
+      "name": "Story",
+      "scope": null,
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10043",
+      "subtask": false
+    },
+    {
+      "avatarId": 10307,
+      "description": "Epics track collections of related bugs, stories, and tasks.",
+      "entityId": null,
+      "hierarchyLevel": 1,
+      "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10307?size=medium",
+      "id": "10044",
+      "name": "Epic",
+      "scope": null,
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10044",
+      "subtask": false
+    },
+    {
+      "avatarId": 10316,
+      "description": "Subtasks track small pieces of work that are part of a larger task.",
+      "entityId": null,
+      "hierarchyLevel": -1,
+      "iconUrl": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10316?size=medium",
+      "id": "10045",
+      "name": "Subtask",
+      "scope": null,
+      "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/issuetype/10045",
+      "subtask": true
+    }
+  ],
+  "key": "OAW",
+  "landingPageInfo": null,
+  "lead": {
+    "accountId": "557058:38820234-7cb2-4799-a242-d90b43affd35",
+    "accountType": null,
+    "active": true,
+    "applicationRoles": null,
+    "avatarUrls": {
+      "16x16": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+      "24x24": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+      "32x32": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png",
+      "48x48": "https://secure.gravatar.com/avatar/65decdcb6df2110f8d467fdf09ed162f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FBK-4.png"
+    },
+    "displayName": "Banee Ishaque K",
+    "emailAddress": null,
+    "expand": null,
+    "groups": null,
+    "key": null,
+    "locale": null,
+    "name": null,
+    "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/user?accountId=557058:38820234-7cb2-4799-a242-d90b43affd35",
+    "timeZone": null
+  },
+  "name": "Oleovista Acer Workspace",
+  "permissions": null,
+  "projectCategory": {
+    "description": "",
+    "id": "10033",
+    "name": "Contract Works",
+    "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/projectCategory/10033"
+  },
+  "projectTypeKey": "software",
+  "properties": {},
+  "retentionTillDate": null,
+  "roles": {
+    "Administrator": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/project/10033/role/10040",
+    "Member": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/project/10033/role/10041",
+    "Viewer": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/project/10033/role/10042",
+    "atlassian-addons-project-access": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/project/10033/role/10043"
+  },
+  "self": "https://jira-prod-eu-126-4.prod.atl-paas.net/rest/api/3/project/10033",
+  "simplified": true,
+  "style": "next-gen",
+  "url": null,
+  "uuid": "f5f3140d-1ed5-44be-a8ef-d31db956b226",
+  "versions": []
+}

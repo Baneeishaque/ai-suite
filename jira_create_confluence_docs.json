@@ -1,0 +1,18 @@
+{
+  "additionalAttributes": {
+    "customfield_10020": 379,
+    "customfield_10110": "2026-04-18T19:00:00.000+0530",
+    "priority": {
+      "name": "Medium"
+    }
+  },
+  "assignee": "baneeishaque@gmail.com",
+  "projectKey": "OAW",
+  "summary": "Component Library Documentation on Confluence (Keep Versioned Source Markdowns) (acer-web)",
+  "type": "Task",
+  "labels": [
+    "acer-web",
+    "design",
+    "components"
+  ]
+}

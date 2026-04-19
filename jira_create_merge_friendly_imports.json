@@ -1,0 +1,17 @@
+{
+  "additionalAttributes": {
+    "customfield_10020": 379,
+    "customfield_10110": "2026-04-18T19:00:00.000+0530",
+    "priority": {
+      "name": "Low"
+    }
+  },
+  "assignee": "baneeishaque@gmail.com",
+  "projectKey": "OAW",
+  "summary": "Make Imports Git Merge Friendly (acer-web)",
+  "type": "Task",
+  "labels": [
+    "acer-web",
+    "vcs"
+  ]
+}

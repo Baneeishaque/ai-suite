@@ -1,0 +1,20 @@
+{
+  "additionalAttributes": {
+    "customfield_10020": 379,
+    "customfield_10110": "2026-04-18T19:00:00.000+0530",
+    "priority": {
+      "name": "Low"
+    }
+  },
+  "assignee": "baneeishaque@gmail.com",
+  "projectKey": "OAW",
+  "summary": "Script/CLI : Make Imports Git Merge Friendly",
+  "type": "Task",
+  "labels": [
+    "ci-cd",
+    "github-actions",
+    "vcs",
+    "cli",
+    "script"
+  ]
+}
