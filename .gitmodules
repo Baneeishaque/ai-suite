@@ -214,3 +214,12 @@
 [submodule "zxkane_aws-skills"]
 	path = zxkane_aws-skills
 	url = https://github.com/zxkane/aws-skills.git
+[submodule "imprisonedmind_codex-skills"]
+	path = imprisonedmind_codex-skills
+	url = https://github.com/imprisonedmind/codex-skills
+[submodule "rbarcante_claude-conductor"]
+	path = rbarcante_claude-conductor
+	url = https://github.com/rbarcante/claude-conductor.git
+[submodule "peetzweg_acli-skill"]
+	path = peetzweg_acli-skill
+	url = https://github.com/peetzweg/acli-skill.git
