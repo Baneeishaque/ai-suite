@@ -1,12 +1,14 @@
 ---
 name: Mise Tool Management
-description: Industrial protocols for mise configuration trust, tool version selection,
-    and Python package setup. Use whenever a mise.toml is untrusted, a required tool
-    is missing, or a Python package needs to be installed into a mise-managed environment.
+description: Industrial protocols for mise configuration trust, tool version selection, and Python package setup.
 category: Environment-Management
 ---
 
 # Mise Tool Management Skill
+
+> **Skill ID:** `mise_tool_management`
+> **Version:** 1.1.0
+> **Standard:** [Agent Skills (agentskills.io)](https://agentskills.io)
 
 ## 1. Scope Statement
 
@@ -23,16 +25,15 @@ Before execution, the agent MUST verify the availability of the following tools:
 | `mise` | Latest stable | `mise --version` |
 | `curl` | Any | `curl --version` |
 | `jq` | Any | `jq --version` |
-| `taplo` | Latest stable | `taplo --version` (for TOML validation) |
-| `markdownlint-cli2` | Latest stable | `markdownlint-cli2 --version` |
+| `taplo` | Latest stable | `taplo --version` |
 
 ***
 
 ## 3. Protocol Layers
 
-The protocol is organized into four hierarchical layers, each acting as a prerequisite for the next.
+The protocol is organized into four hierarchical layers.
 
-### 3.1 Layer 1: Configuration Trust Protocol
+### 3.1 Phase 1: Configuration Trust Protocol
 
 `mise` requires explicit trust for any configuration file (`mise.toml`).
 
@@ -41,7 +42,7 @@ The protocol is organized into four hierarchical layers, each acting as a prereq
 3.  **Authorization**: Ask: "Do you want to trust this `mise.toml`? (yes / no)".
 4.  **Execution**: `mise trust path/to/mise.toml`.
 
-### 3.2 Layer 2: Tool Selection Protocol
+### 3.2 Phase 2: Tool Selection Protocol
 
 Ensures the correct tool versions are installed and used.
 
@@ -50,7 +51,7 @@ Ensures the correct tool versions are installed and used.
 3.  **Comparison**: If `installed` > `required`, ask user to use the installed version and update `mise.toml`.
 4.  **Selection**: `mise use --path . <tool>@<version>`.
 
-### 3.3 Layer 3: Python Environment Setup
+### 3.3 Phase 3: Python Environment Setup
 
 Specialized verification for Python environments.
 
@@ -58,7 +59,7 @@ Specialized verification for Python environments.
 2.  **Pip Check**: `mise exec -- python -m pip --version`.
 3.  **Repair**: If missing, run `mise exec -- python -m ensurepip --upgrade`.
 
-### 3.4 Layer 4: Python Package Setup Protocol
+### 3.4 Phase 4: Python Package Setup Protocol
 
 Automated dependency management via `pip`.
 
@@ -71,38 +72,31 @@ Automated dependency management via `pip`.
 
 ## 4. Deep Command Explanation
 
-### 4.1 `mise exec`
+### 4.1 `mise exec -- <command>`
 - `mise exec`: Runs the command within the context of the `mise` environment.
-- `--cd <path>`: Sets the working directory, ensuring the correct `mise.toml` is loaded.
 - `--`: Separates `mise` arguments from the command to be executed.
+- This is the mandatory way to invoke tools in a `mise`-managed project to ensure correct pathing and versioning.
 
-### 4.2 `taplo` (TOML Validation)
-- `taplo check`: Validates TOML syntax.
-- `taplo fmt --check`: Verifies formatting without modifying.
-- `taplo fmt`: Auto-formats the TOML file in-place.
+### 4.2 `taplo check`
+- Validates TOML syntax for `mise.toml`.
+- Critical for ensuring configuration integrity before trust is applied.
 
-***
-
-## 5. Execution Protocol
-
-1.  **Verify Trust**: Check if `mise.toml` is trusted.
-2.  **Select Tool**: Determine and install the correct version.
-3.  **Verify Environment**: Ensure the interpreter and `pip` are functional.
-4.  **Manage Packages**: Install/update dependencies via `requirements.txt`.
-5.  **Validate Changes**: Run `taplo` and `markdownlint-cli2` on modified files.
+### 4.3 `mise ls --json`
+- Retrieves tool status in a machine-readable format.
+- Essential for automated version audits and comparison against required baselines.
 
 ***
 
-## 6. Prohibited Behaviors
+## 5. Prohibited Behaviors
 
 - **No auto-trust**: Never run `mise trust` without showing the config and getting approval.
 - **No global pollution**: Never run `mise use` without `--path` to a local config.
 - **No path-based invocation**: Never call `python` or `pip` directly; always use `mise exec`.
-- **No unvalidated edits**: Never finish a task without running the appropriate linter/formatter.
+- **No silent updates**: Never update `requirements.txt` without showing the version delta to the user.
 
 ***
 
-## 7. Related Conversations & Traceability
+## 6. Related Conversations & Traceability
 
-- **Skill Factory Protocol**: [.agents/skills/skill_factory/SKILL.md](../../.agents/skills/skill_factory/SKILL.md)
 - **Standardization Rules**: [ai-rule-standardization-rules.md](../../../ai-agent-rules/ai-rule-standardization-rules.md)
+- **System-Wide Tool Management**: [../system_wide_tool_management/SKILL.md](../system_wide_tool_management/SKILL.md)

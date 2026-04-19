@@ -12,448 +12,99 @@ category: Git & Repository Management
 > **Version:** 1.0.0
 > **Standard:** [Agent Skills (agentskills.io)](https://agentskills.io)
 
-## Description
+# Git History Refinement Skill
 
-Refine or reconstruct existing Git commit history when commits contain
-mixed concerns (non-atomic changes) that need to be split, re-ordered,
-or cleaned up. This skill covers the full lifecycle: backup creation,
-baseline reset, atomic extraction (including JSON manipulation),
-metadata preservation, tree parity verification, and safe remote push
-reconciliation.
+## 1. Scope Statement
 
-This skill is invoked AFTER commits already exist and need improvement.
-For constructing new commits from working-tree changes, use the
-[`git_atomic_commit`](../git_atomic_commit/SKILL.md) skill instead.
+This skill establishes the industrial protocol for reconstructing and refining existing Git history. It is used to decompose non-atomic commits (mixed concerns) into logical, independent units through a "Reset and Restore" strategy. The protocol prioritizes historical integrity through mandatory backup branches, tree parity verification, and surgical metadata preservation. It ensures that the final refined history is buildable, clean, and synchronized with remote baselines.
 
-For hierarchical multi-branch rebasing, see the
-[`git_rebase`](../git_rebase/SKILL.md) skill.
+***
 
-## Prerequisites
+## 2. Environment & Dependencies
 
-| Requirement | Minimum |
-| :--- | :--- |
-| VCS | Git 2.x+ |
-| Shell | PowerShell 5.1+ or Bash 4+ |
-| Tools | `jq` (for JSON manipulation steps) |
-| Access | Write access to the project repository |
+Before execution, the agent MUST verify the following:
 
-## When to Apply
+| Requirement | Minimum Version | Verification Command |
+|---|---|---|
+| `git` | 2.x+ | `git --version` |
+| `jq` | Latest | `jq --version` |
+| Shell | PowerShell 5.1+ or Bash 4+ | `$PSVersionTable` or `bash --version` |
 
-Apply this skill when:
+***
 
-- Existing commits contain mixed concerns that need splitting
-- A user asks to "refine history," "split a commit," or "fix non-atomic
-  commits"
-- A commit mixes formatting + logic + config and needs decomposition
-- JSON files (e.g., `.vscode/settings.json`) need atomic key-by-key
-  splitting across commits
-- The user asks to reconstruct history from a clean baseline
+## 3. Protocol Layers
 
-Do NOT apply when:
+The protocol is organized into seven operational phases.
 
-- Changes are uncommitted (working-tree state) — use
-  [`git_atomic_commit`](../git_atomic_commit/SKILL.md) instead
-- The task is a multi-branch rebase — use
-  [`git_rebase`](../git_rebase/SKILL.md) instead
-- The user just wants to amend the most recent commit message
+### 3.1 Phase 1: Safety & Backup Protocol
 
----
+1.  **State Preservation**: Stage all local changes and create a temporary "state preservation" commit.
+2.  **Incremental Backup**: Create `backup/pre-refinement-<n>` using incremental naming. Do NOT use `-f`.
+3.  **Baseline Verification**: Confirm the target "clean" baseline commit.
 
-## Step-by-Step Procedure
+### 3.2 Phase 2: Remote Reconciliation
 
-### Step 1 — Backup Protocol (Safety First)
+1.  **Fetch**: Run `git fetch origin <branch>`.
+2.  **Alignment**: If remote has diverged, identify the latest remote commit as the refinement baseline.
 
-The agent **MUST** create a backup branch before performing any
-destructive history operations (`reset --hard`, `rebase`, etc.).
+### 3.3 Phase 3: Baseline Reset (Reconstruction)
 
-#### 1a — Incremental Branch Naming
+1.  **Hard Reset**: Run `git reset --hard <clean-commit-hash>`.
+2.  **Orphan Root**: Use `git checkout --orphan temp-master` if refining the root commit.
 
-Use an incrementing suffix to prevent overwriting existing backups:
+### 3.4 Phase 4: Atomic Extraction & Synthesis
 
-1. **Prefix:** `backup/pre-settings-split-` (or descriptive equivalent)
-2. **Check existing:**
+1.  **Standard Restoration**: Use `git show <backup-branch>:<path> > <path>` to restore files.
+2.  **JSON Manipulation**: Use `jq` for key-by-key splitting of complex configuration files (e.g., `settings.json`).
+3.  **Micro-Renumbering**: Maintain structural validity in protocol files (Phase 1, 2, 3...) at every intermediate commit.
 
-   ```bash
-   git branch --list "backup/pre-settings-split-*"
-   ```
+### 3.5 Phase 5: Metadata Preservation & Commit
 
-3. **Increment:** Select the first integer `n` that does NOT have a
-   corresponding branch (e.g., if `-1` and `-2` exist, use `-3`)
+1.  **Metadata Reuse**: Use `git commit -C <original-hash>` to preserve original timestamps and messages where appropriate.
+2.  **Atomic Rationale**: Update commit messages to reflect the refined, atomic scope.
 
-#### 1b — Workspace Preservation
+### 3.6 Phase 6: Tree Parity Verification
 
-Before creating the branch, stage all local changes and create a
-temporary "state preservation" commit. This ensures the backup captures
-the exact state including uncommitted changes.
+1.  **Global Diff**: Run `git diff <current-branch> <backup-branch>`.
+2.  **Constraint**: The diff **MUST** be empty. Tree parity is the ultimate proof of a non-regressive refinement.
 
-#### 1c — Branch Creation
+### 3.7 Phase 7: Remote Push Protocol
 
-```bash
-git branch <backup-branch-name>
-```
+1.  **Remote Backup**: Create `backup/pre-force-push-<n> origin/<branch>`.
+2.  **Authorization**: Ask "Shall I push these changes?".
+3.  **Execution**: Use `git push --force-with-lease` ONLY after explicit approval.
 
-**CRITICAL:** Do NOT use `-f` to force-move a branch.
+***
 
----
+## 4. Deep Command Explanation
 
-### Step 2 — Remote Baseline Reconciliation (Rule 2.5)
+### 4.1 `git reset --hard <hash>`
+- Resets the current branch to point to `<hash>` and updates the working tree and index to match.
+- This is the "baseline" command for reconstruction, clearing out the messy history segment.
 
-Before starting any history refinement, synchronize with the remote source of truth to prevent
-divergence.
+### 4.2 `jq '{ "key": .["key"] }' input.json > output.json`
+- `jq`: A command-line JSON processor.
+- `{ "key": .["key"] }`: A filter that constructs a new JSON object containing only the specified key from the input.
+- This is critical for splitting a large JSON change (e.g., adding 10 rules) into 10 atomic commits.
 
-1. **Mandatory Fetch:**
+### 4.3 `git diff <branch1> <branch2>`
+- Compares the state of two branches at their respective HEADs.
+- In this protocol, it is used to ensure that the reconstructed history (refined) resulted in the exact same final state as the original (backup).
 
-   ```bash
-   git fetch origin <branch>
-   ```
+***
 
-2. **Reconciliation:** If `origin/<branch>` contains commits not present
-   locally, identify the latest remote commit as the new "Refinement
-   Baseline" and reconstruct locally atop it.
+## 5. Prohibited Behaviors
 
-3. **Submodule Awareness (Recursive):** This protocol applies recursively
-   to submodules. Never begin a submodule refinement without a
-   `git -C <path> pull` or fetch.
+- **No auto-deletion**: Never delete backup branches without explicit user authorization.
+- **No force-moving**: Avoid `git branch -f`; use incremental naming for backups.
+- **No skipping parity checks**: Tree parity is mandatory for all reconstructions.
+- **No generic messages**: Commit messages must be evidence-based and specific.
+- **No silent force-pushing**: Always use `--force-with-lease` and wait for user approval.
 
-4. **Hierarchical Rebase Coordination:** For complex multi-branch
-   operations or chain rebasing, the agent **MUST** follow the
-   **[Git Rebase Standardization Rules](../../../ai-agent-rules/git-rebase-standardization-rules.md)**
-   to ensure graph integrity and eliminate cross-branch redundancies (Rule 2.9).
+***
 
----
+## 6. Related Conversations & Traceability
 
-### Step 3 — Pre-Execution Analysis (Mandatory)
-
-Commit messages and change descriptions MUST be derived from actual file
-analysis, not assumptions.
-
-1. **Read Before Writing:** Before finalizing any commit message:
-   - Read the current state: `git show <base-commit>:<file>`
-   - Read the target state from the backup branch
-   - Perform explicit `git diff` comparisons
-
-2. **Evidence-Based Messages:** Commit messages must reflect ACTUAL
-   changes observed, not planned or assumed changes.
-
-3. **No Placeholder Content:** Never use generic descriptions like
-   "update metadata" without specifying which fields changed and how.
-
----
-
-### Step 4 — Baseline Reset (Reconstruction)
-
-Reset the active branch to the last known "clean" commit before the
-messy historical segment.
-
-```bash
-git reset --hard <clean-commit-hash>
-```
-
-#### 4a — Root Commit Refinement
-
-If the refinement involves the first commit (root) of the repository,
-use an orphan branch:
-
-```bash
-git checkout --orphan temp-master
-git rm -rf .
-```
-
-This allows reconstructing history from scratch while preserving the
-repository's identity.
-
----
-
-### Step 5 — Atomic Extraction (Rule 2.2)
-
-When splitting changes across existing commits, use the **"Reset and Restore"**
-strategy to reconstruct the history atop a clean baseline.
-
-#### 5a — Standard File Extraction
-
-Fetch the target version of files from the backup branch:
-
-```bash
-git show <backup-branch>:<path/to/file> > <path/to/file>
-```
-
-#### 5b — Atomic JSON Manipulation (jq)
-
-When a JSON file (like `.vscode/settings.json`) needs to be split across
-commits, use `jq` to extract exactly the relevant keys for the current
-atomic unit.
-
-1. **Extract Original:** Fetch the final version from the backup.
-
-   ```bash
-   git show <backup-branch>:<path/to/file.json> > <file.json>.bak
-   ```
-
-2. **Filter with jq:** Create a valid JSON containing only the commit-specific keys.
-
-   ```bash
-   jq '{ "specific.key": .["specific.key"] }' <file.json>.bak > <file.json>
-   ```
-
-3. **Verification:** The agent **MUST** verify the generated JSON is valid before staging.
-
-   ```bash
-   jq . <file.json>
-   ```
-
-#### 5c — Canonical Sorting and Formatting
-
-When manipulating JSON arrays (e.g., `cSpell.words`), preserve or
-enforce the project's standard sort order:
-
-1. **Inspect** neighbouring commits to determine expected sort order
-   (ASCII vs. case-insensitive natural sort)
-2. **Apply consistently** at every stage of reconstruction
-3. **Prefer stable sorting tools** (e.g., Python's
-   `sorted(key=str.lower)`) over standard `jq` sort if
-   case-insensitivity is required
-
----
-
-### Step 6 — Metadata Preservation
-
-When re-creating commits that originally had specific messages and
-timestamps, use the original commit's hash to preserve metadata:
-
-```bash
-git commit -C <original-hash>
-```
-
----
-
-### Step 7 — Sequential Integrity (Protocol Files)
-
-When refining history for documents containing numbered phases or
-state-dependent protocols, maintain structural validity at **every**
-intermediate commit.
-
-- **Valid-Sequence Rule:** Every commit must result in a valid 1-N
-  sequence of phases. No gaps, no duplicates, no "broken" intermediate
-  states.
-- **Micro-Renumbering:** If a commit adds Phases 4 and 5, and the
-  original file already had a Phase 4 (now 6), renumber all subsequent
-  phases within the same atomic unit to maintain immediate validity.
-
-**Visual Example (Micro-Renumbering):**
-```markdown
-[Before Commit]        [After Commit]
-## Phase 1             ## Phase 1
-## Phase 2             ## Phase 2
-## Phase 3             ## Phase 4 (Added)
-## Phase 4 (Old)       ## Phase 5 (Added)
-                       ## Phase 6 (Renumbered)
-```
-
----
-
-### Step 8 — Link Verification (Rule 2.7)
-
-For **EVERY** file rename operation, the agent **MUST** perform
-global link verification to prevent broken references.
-
-1. **Immediate grep check:**
-
-   ```bash
-   grep -r "Old-Filename.md" . --exclude-dir=.git
-   ```
-
-2. **Update all references:** Use `sed` or manual edits to update ALL
-   discovered references, including:
-   - Internal documentation links
-   - Template files (e.g., `templates/README.md.template`)
-   - Architecture documents
-   - Rule cross-references
-3. **Exclusion protocol:** Exclude CI/CD-managed files (e.g.,
-   `README.md`) from manual edits if they are auto-generated.
-4. **Final verification:** Before committing, re-run grep with
-   `--exclude` flags for managed files to confirm cleanup.
-
----
-
-### Step 9 — Cherry-Pick Protocol (Preserving Dependents)
-
-When splitting a commit that has subsequent commits built on top of it,
-preserve those dependent commits.
-
-1. **Identify dependents:**
-
-   ```bash
-   git log --oneline <split-commit>..HEAD
-   ```
-
-2. **Sequential cherry-pick** in chronological order:
-
-   ```bash
-   git cherry-pick <commit-hash>
-   ```
-
-3. **Conflict resolution:** If conflicts arise:
-   - Resolve while preserving the original commit's intent
-   - Reference original changes: `git show <original-hash>`
-   - Mark resolved: `git add <file>`
-   - Continue: `git cherry-pick --continue`
-
----
-
-### Step 10 — Verification & Tree Parity
-
-#### 10a — Content-Level Verification
-
-After each commit in the reconstruction, confirm only intended changes:
-
-```bash
-git show HEAD
-```
-
-#### 10b — Tree Parity Check (Rule 3.2)
-
-After the final commit in the refinement process, the current branch **MUST**
-be compared to the backup:
-
-```bash
-git diff <current-branch> <backup-branch>
-```
-
-**Constraint:** The diff **MUST** be empty. Any discrepancy indicates a
-regression introduced during refinement.
-**Expected:** Empty diff (tree parity maintained).
-
----
-
-### Step 11 — Post-Refinement Remote Push Protocol (Rule 2.9)
-
-If the remote has diverged after refinement, reconcile before pushing.
-
-#### 11a — Pre-Push Remote Backup (MANDATORY)
-
-Before any destructive operation (force-push), the agent **MUST** create a
-backup of the remote state:
-
-```bash
-git branch backup/pre-force-push-<n> origin/<branch>
-```
-
-**Naming:** Use incremental integers `<n>` to avoid overwriting existing
-backups. **Verify:** Confirm existence with:
-
-```bash
-git branch --list "backup/pre-force-push-*"
-```
-
-#### 11b — Remote Divergence Analysis
-
-Analyze the gap between the remote and the refined local history:
-
-```bash
-git fetch origin <branch>
-git log <refinement-baseline>..origin/<branch> --oneline --graph --decorate
-```
-
-#### 11c — Commit Categorization Protocol
-
-Assign every remote commit to exactly one category:
-
-| Category | Definition | Action |
-| :--- | :--- | :--- |
-| **New** | Truly unique logic, content, or manual fixes created after refinement started. | **MUST** Cherry-pick |
-| **Covered** | Changes already present in refined history (renames, splits, formatting). | Skip (User approval required) |
-| **Regenerative** | Auto-generated files (e.g., `README.md`, `agent-rules.md`) synced by CI. | Skip (User approval required) |
-
-**Identifying Regenerative Files:** Check `.github/workflows/` or
-relevant scripts (e.g., `sync_rules.py`) to see if the file is a target of
-automated generation. If a commit **ONLY** modifies these files, it
-is **Regenerative**.
-
-#### 11d — Reconciliation Strategy
-
-1. **Present Categorized List:** Present all remote commits and their
-   assigned categories to the user.
-2. **Mandatory Approval:** The user **MUST** explicitly approve the
-   categorization and the decision to skip "Covered" or "Regenerative" commits.
-3. **Cherry-Pick:** Apply only approved "New" commits onto the refined HEAD.
-
-   ```bash
-   git cherry-pick <hash>
-   ```
-
-#### 11e — Force Push Safety Protocol
-
-1. **Explicit Confirmation:** Request approval: "I understand that
-   `origin/<branch>` will be replaced. Proceed?"
-2. **Force with Lease:** Use the lease flag to prevent overwriting
-   unexpected remote changes:
-
-   ```bash
-   git push --force-with-lease origin <branch>
-   ```
-
-#### 11f — Remote Rollback Procedure
-
-If the remote state is incorrect after push, restore it from the backup:
-
-```bash
-git push --force-with-lease origin backup/pre-force-push-<n>:<branch>
-```
-
-#### 11g — Backup Cleanup (Rule 2.9.7)
-
-Once the user has manually verified the remote state, the backup branch
-**SHOULD** be deleted to maintain repository hygiene.
-
-```bash
-git branch -D backup/pre-force-push-<n>
-```
-
-> [!CRITICAL]
-> The agent is **PROHIBITED** from executing this step automatically.
-> It **MUST** remain a manual instruction or require separate,
-> explicit authorization.
-
----
-
-### Step 12 — Finalization
-
-The agent is **BLOCKED** from deleting backup branches automatically.
-
-1. Provide a walkthrough of the refined history
-2. Request explicit user confirmation before deleting any backup branches
-
----
-
-## Prohibited Behaviors
-
-The agent is **BLOCKED** from:
-
-- **Deleting backup branches automatically** — Requires explicit user
-  authorization
-- **Skipping the backup step** — Mandatory before any destructive
-  operation
-- **Force-moving branches with `-f`** — Use incremental naming instead
-- **Using generic commit messages** — Messages must reflect actual
-  observed changes
-- **Skipping tree parity check** — The final diff against backup MUST
-  be empty
-- **Skipping empty commits without user confirmation** — During rebase
-- **Force-pushing without `--force-with-lease`** — To prevent
-  overwriting unexpected remote changes
-- **Auto-deleting backup branches after force push** — Must remain until
-  user verifies remote state
-
-## Common Pitfalls
-
-| Pitfall | Solution |
-| :--- | :--- |
-| Backup branch overwritten by force | Use incremental naming, never `-f` |
-| Uncommitted changes lost during reset | Create state-preservation commit before backup |
-| JSON key order changed between commits | Enforce canonical sorting consistently across all stages |
-| Protocol file has broken phase numbering mid-history | Apply micro-renumbering within the same atomic unit |
-| Cherry-pick conflicts during dependent preservation | Reference `git show <original-hash>` to preserve intent |
-| Tree parity check shows differences | Regression during refinement — re-examine extraction steps |
-| Remote diverged during long refinement | Fetch and categorize remote commits before force-push |
-| Generated file manually edited in refinement | Check for auto-generation markers first |
-| Commit message says "update metadata" without specifics | Read actual diffs before writing messages |
+- **Git Atomic Commit**: [../git_atomic_commit/SKILL.md](../git_atomic_commit/SKILL.md)
+- **Git Rebase Standardization**: [../git_rebase/SKILL.md](../git_rebase/SKILL.md)
+- **Standardization Rules**: [ai-rule-standardization-rules.md](../../../ai-agent-rules/ai-rule-standardization-rules.md)

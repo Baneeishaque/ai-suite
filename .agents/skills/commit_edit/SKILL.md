@@ -8,495 +8,90 @@ category: Git & Repository Management
 
 # Git Commit Edit Skill
 
-> **Skill ID:** `commit_edit`
-> **Version:** 1.0.0
-> **Standard:** [Agent Skills (agentskills.io)](https://agentskills.io)
+# Git Commit Edit Skill
 
-## Description
+## 1. Scope Statement
 
-Edit an existing Git commit in-place using interactive rebase with the
-`edit` action. This skill covers targeted, surgical modifications to a
-single commit — removing unwanted files, adding missing files, amending
-content, or fixing mixed concerns — while preserving all descendant
-commits and the working tree state.
+This skill establishes the surgical protocol for editing existing Git commits in-place via interactive rebase. It provides a "scalpel" approach for removing unwanted files (noise, binaries), adding missing files, amending content, or correcting metadata (author/email) while preserving the integrity of descendant commits. This protocol prioritizes safety through mandatory stashing, backup branches, and explicit user authorization gates.
 
-Unlike [`git_history_refinement`](../git_history_refinement/SKILL.md)
-(which reconstructs history from a clean baseline), this skill performs
-**minimal, targeted edits** to a specific commit. It is the "scalpel"
-approach vs the "rebuild" approach.
+***
 
-Unlike [`git_atomic_commit`](../git_atomic_commit/SKILL.md) (which
-constructs new commits from working-tree changes), this skill modifies
-**already-committed** history.
+## 2. Environment & Dependencies
 
-## Source Rules
+Before execution, the agent MUST verify the following:
 
-| Rule File | Scope Incorporated |
-|---|---|
-| [`git-operation-rules.md`](../../../ai-agent-rules/git-operation-rules.md) | Sections 2–4 (commit/push/stash protocols) |
-| [`git-atomic-commit-construction-rules.md`](../../../ai-agent-rules/git-atomic-commit-construction-rules.md) | Phase 9 (execution & verification), Phase 14 (push protocol) |
+| Requirement | Minimum Version | Verification Command |
+|---|---|---|
+| `git` | 2.x+ | `git --version` |
+| Shell | PowerShell 5.1+ or Bash 4+ | `$PSVersionTable` or `bash --version` |
 
-## Prerequisites
+- **State Verification**: A clean working tree is preferred. If dirty, the [Git Atomic Commit Skill](../git_atomic_commit/SKILL.md) or `git stash` protocol MUST be applied.
 
-| Requirement | Minimum |
-|---|---|
-| VCS | Git 2.x+ |
-| Shell | PowerShell 5.1+ or Bash 4+ |
-| Access | Write access to the project repository |
-| State | Clean working tree (or willingness to stash) |
+***
 
-## When to Apply
+## 3. Protocol Layers
 
-Apply this skill when:
-- A user asks to "edit a commit," "remove files from a commit," or
-  "fix a commit"
-- A specific commit contains unwanted files (noise, binaries,
-  IDE artifacts) that should be removed
-- A commit is missing files that should have been included
-- A commit's content needs amendment without splitting into multiple
-  commits
-- The user identifies a specific commit hash and wants targeted changes
-- The user asks to correct the author name or email of specific historical commits
+The protocol is organized into five operational phases.
 
-Do NOT apply when:
-- The user wants to split a commit into multiple atomic commits — use
-  [`git_history_refinement`](../git_history_refinement/SKILL.md) instead
-- Changes are uncommitted (working-tree state) — use
-  [`git_atomic_commit`](../git_atomic_commit/SKILL.md) instead
-- The user wants to rebase branches — use
-  [`git_rebase`](../git_rebase/SKILL.md) instead
-- The commit is the most recent and only needs a message change — use
-  `git commit --amend -m "..."` directly (no rebase needed)
+### 3.1 Phase 1: Pre-Edit Analysis & Planning
 
----
+1.  **Identification**: Confirm target commit hash and descendant count via `git log --oneline -n`.
+2.  **Inspection**: Run `git show --stat <hash>` to understand the full footprint.
+3.  **Divergence Check**: Verify if the commit has been pushed to remote (`git log <hash>..origin/<branch>`).
+4.  **Authorization Gate**: Present a formal "Commit Edit Plan" to the user and obtain explicit "Proceed" confirmation.
 
-## Step-by-Step Procedure
+### 3.2 Phase 2: Safety Initialization
 
-### Step 0 — Pre-Edit Analysis
+1.  **Mandatory Stash**: Run `git stash push -m "Pre-edit stash"` if the working tree is dirty.
+2.  **Backup Branch**: Create `backup/pre-edit-<n>` to ensure a recovery point.
 
-Before any rebase, fully understand the target commit and its context.
+### 3.3 Phase 3: Interactive Rebase Execution
 
-#### 0a — Identify the Target Commit
+1.  **Sequence Editor**: Use a non-interactive script to mark the target commit as `edit`.
+2.  **Edit Loop**: Perform surgical changes (removal, addition, modification).
+3.  **Amending**: Run `git commit --amend --no-edit` (or with `-m` if updating message).
+4.  **Continuation**: Run `git rebase --continue` and handle any downstream conflicts.
 
-Confirm the exact commit hash, its position in history, and the current
-branch:
+### 3.4 Phase 4: Remote Synchronization
 
-```powershell
-git log --oneline -20
-git branch --show-current
-```
+1.  **Push Authorization**: If the branch has diverged, create a remote backup branch (`backup/pre-force-push-<n>`).
+2.  **Execution**: Ask "Shall I push these changes?". Use `git push --force-with-lease` ONLY after explicit approval.
 
-#### 0b — Inspect the Target Commit
+### 3.5 Phase 5: Verification & Cleanup
 
-Show the full stat and optionally the diff to understand ALL changes
-in the commit:
+1.  **Audit**: Present the refined history via `git log`.
+2.  **Cleanup Gate**: Ask: "Shall I clean up the backup branches?". Do NOT delete without approval.
 
-```powershell
-git show --stat <commit-hash>
-```
+***
 
-For detailed content inspection:
+## 4. Deep Command Explanation
 
-```powershell
-git show <commit-hash> -- <specific-file>
-```
+### 4.1 `git checkout HEAD~1 -- <file>`
+- `git checkout`: In this context, it restores files in the working tree.
+- `HEAD~1`: Points to the state of the file in the commit immediately preceding the current one.
+- `-- <file>`: Ensures that `<file>` is treated as a path, preventing ambiguity if a branch shares the same name. This effectively reverts the file's changes in the current commit.
 
-#### 0c — Count Descendant Commits
+### 4.2 `git commit --amend --author="..."`
+- `--amend`: Modifies the most recent commit instead of creating a new one.
+- `--author="..."`: Overrides the author metadata for the commit.
+- `--no-edit`: Reuses the existing commit message without opening an editor.
 
-Determine how many commits sit on top of the target. These will be
-replayed after the edit:
+### 4.3 `git push --force-with-lease`
+- `--force-with-lease`: A safer alternative to `--force`. It checks that the remote ref hasn't been updated by someone else before overwriting it, preventing accidental loss of teammate's work.
 
-```powershell
-git log --oneline <commit-hash>..HEAD
-```
+***
 
-#### 0d — Check Remote Divergence
+## 5. Prohibited Behaviors
 
-If the branch has been pushed, warn the user that editing will require
-a force push:
+- **No auto-deletion**: Never delete backup branches without explicit user authorization.
+- **No silent pushing**: Never execute `git push` (especially force-push) without a user gate.
+- **No skipping backups**: Backup branches are mandatory for all history-rewriting operations.
+- **No hard resets**: Avoid `git reset --hard` for targeted file removal; use `git checkout HEAD~1 --` instead.
 
-```powershell
-git log --oneline <commit-hash>..origin/<branch>
-```
+***
 
-#### 0e — Workspace Backup (Safety First)
+## 6. Related Conversations & Traceability
 
-The agent **MUST** create a backup branch before performing any destructive interactive rebase.
-
-1. **Incremental Naming:** Use `backup/pre-edit-<n>`
-2. **Branch Creation:**
-   ```powershell
-   git branch backup/pre-edit-<n>
-   ```
-
-#### 0f — Present the Edit Plan
-
-The agent **MUST** present the following to the user before proceeding:
-
-````markdown
-## Commit Edit Plan
-
-**Target commit:** `<short-hash>` — `<commit message>`
-**Descendant commits to replay:** <count>
-**Branch:** `<branch-name>`
-
-### Changes to make:
-- Remove: <list of files/patterns to remove>
-- Add: <list of files to add>
-- Modify: <list of files to amend>
-
-### Proposed steps:
-1. Stash uncommitted changes (if any)
-2. Create workspace backup branch (`backup/pre-edit-<n>`)
-3. Interactive rebase, mark `<short-hash>` as `edit`
-4. <specific edit actions>
-5. Amend the commit
-6. Continue rebase (replay <count> descendants)
-7. Restore stashed changes
-
-**⚠️ Warning:** This rewrites history. Force push required if
-branch was previously pushed to remote.
-
-Proceed? (yes / no)
-````
-
-**The agent MUST NOT begin the rebase until the user confirms.**
-
----
-
-### Step 1 — Stash Uncommitted Work
-
-If the working tree has uncommitted changes, stash them with a
-descriptive message:
-
-```powershell
-git stash push -m "Pre-edit stash: <description of pending work>"
-```
-
-Verify the stash was created:
-
-```powershell
-git stash list
-```
-
----
-
-### Step 2 — Start Interactive Rebase
-
-#### 2a — Create Sequence Editor Script
-
-Create a temporary script that automatically marks the target commit
-as `edit` in the rebase todo list:
-
-**PowerShell:**
-
-```powershell
-$script = @'
-param($file)
-(Get-Content $file) -replace '^pick <short-hash>', 'edit <short-hash>' | Set-Content $file
-'@
-Set-Content -Path "_rebase_editor.ps1" -Value $script
-```
-
-#### 2b — Launch the Rebase
-
-```powershell
-$env:GIT_SEQUENCE_EDITOR = 'powershell -ExecutionPolicy Bypass -File _rebase_editor.ps1'
-git rebase -i <commit-hash>~1
-```
-
-**Expected output:** Git stops at the target commit with the message
-`Stopped at <hash>... <message>`.
-
-#### 2c — Verify Rebase State
-
-Confirm the rebase paused at the correct commit:
-
-```powershell
-git log --oneline -1
-```
-
-The output should show the target commit hash and message.
-
----
-
-### Step 3 — Perform the Edit
-
-Execute the specific edit actions. Common operations:
-
-#### 3a — Remove Files from the Commit
-
-Restore files to their parent's version (effectively removing them
-from this commit's diff):
-
-```powershell
-# Remove specific files
-git checkout HEAD~1 -- <file1> <file2>
-
-# Remove files matching a pattern
-git checkout HEAD~1 -- $(git diff --name-only HEAD~1 HEAD -- "*.project")
-```
-
-Verify the removal:
-
-```powershell
-git diff --cached --stat -- "*.project"
-```
-
-#### 3b — Add Files to the Commit
-
-Stage new files that should have been part of this commit:
-
-```powershell
-git add <file1> <file2>
-```
-
-#### 3c — Modify Existing Files
-
-Edit the file content as needed, then stage:
-
-```powershell
-# Make edits to the file...
-git add <modified-file>
-```
-
-#### 3d — Remove Binary Files
-
-For binary files that should not have been committed:
-
-```powershell
-git rm --cached <binary-file>
-```
-
-#### 3e — Amend Commit Author
-
-To correct the author name or email without altering the commit message or file contents:
-
-```powershell
-git commit --amend --author="New Name <new.email@example.com>" --no-edit
-```
-
----
-
-### Step 4 — Amend the Commit
-
-After all edits are staged, amend the commit:
-
-```powershell
-# Keep the original message
-git commit --amend --no-edit
-
-# Or update the message
-git commit --amend -m "<new message>"
-```
-
-#### 4a — Verify the Amended Commit
-
-Confirm the commit now contains only the intended changes:
-
-```powershell
-git show --stat HEAD
-```
-
-**Count check:** Compare the file count before and after. The agent
-MUST report the delta:
-
-```
-Before: 70 files changed, +1,024 / −21
-After:  16 files changed, +686 / −13
-Removed: 54 noise files
-```
-
----
-
-### Step 5 — Continue Rebase
-
-Replay the descendant commits on top of the amended commit:
-
-```powershell
-git rebase --continue
-```
-
-**Expected output:** `Successfully rebased and updated refs/heads/<branch>.`
-
-#### 5a — Handle Conflicts
-
-If a descendant commit conflicts with the edit:
-
-1. **Inspect the conflict:**
-   ```powershell
-   git status
-   git diff
-   ```
-
-2. **Resolve the conflict** — Edit the conflicting files, then:
-   ```powershell
-   git add <resolved-files>
-   git rebase --continue
-   ```
-
-3. **If the conflict makes the descendant commit empty** (e.g., the
-   descendant also touched a removed file):
-   ```powershell
-   git rebase --skip
-   ```
-   **⚠️ Only skip after confirming with the user** that the now-empty
-   commit is expected.
-
-#### 5b — Handle Corrupted Rebase State
-
-If `git rebase --continue` fails with
-`warning: could not read '.git/rebase-merge/head-name'`:
-
-```powershell
-Test-Path ".git/rebase-merge"
-Get-ChildItem ".git/rebase-merge"
-```
-
-If the directory is empty/corrupted:
-
-```powershell
-Remove-Item ".git/rebase-merge" -Recurse -Force
-git status
-```
-
-Then commit directly instead of using `git rebase --continue`.
-
----
-
-### Step 6 — Restore Stashed Work
-
-If changes were stashed in Step 1:
-
-```powershell
-git stash pop
-```
-
-Verify restored state:
-
-```powershell
-git status --short
-```
-
-If `git stash pop` creates conflicts, resolve manually, then:
-
-```powershell
-git add <resolved-files>
-git stash drop
-```
-
----
-
-### Step 7 — Cleanup
-
-Remove any temporary files created during the rebase:
-
-```powershell
-Remove-Item "_rebase_editor.ps1" -Force -ErrorAction SilentlyContinue
-```
-
-#### 7a — Final Verification
-
-Run a comprehensive status check:
-
-```powershell
-git log --oneline -10
-git status --short
-```
-
-#### 7b — Pre-Push Remote Backup & Push Authorization
-
-If the branch was previously pushed, a force push is required. Before any destructive operation (force-push), the agent **MUST** create a backup of the remote state:
-
-```powershell
-git branch backup/pre-force-push-<n> origin/<branch>
-```
-
-Then inform the user of the required push action:
-
-```
-⚠️ Branch has diverged from origin/<branch>.
-Force push required: git push --force-with-lease origin <branch>
-```
-
-Or for a simple push:
-```
-Branch is ahead of origin/<branch>.
-Push required: git push origin <branch>
-```
-
-The agent **MUST** explicitly ask the user: *"Shall I push these changes to the remote repository?"*
-
-**The agent MUST NOT push (whether simple or force) without the user explicitly saying so.**
-
----
-
-### Step 8 — Finalization & Backup Cleanup
-
-Once the rebase and any necessary force-pushes are complete, the agent **MUST** verify the new history with the user and explicitly request authorization to clean up backups.
-
-1. **Present the final refined history:**
-   ```powershell
-   git log --oneline -10
-   ```
-2. **Explicitly ask:** *"Is everything OK? Shall I clean up the backup branches?"*
-3. **ONLY** if the user explicitly confirms (e.g., "yes", "cleanup backup"), delete the backup branches:
-   ```powershell
-   git branch -D backup/pre-edit-<n>
-   git branch -D backup/pre-force-push-<n>
-   # If remote backup was pushed:
-   git push origin --delete backup/pre-force-push-<n>
-   ```
-
-> [!CRITICAL]
-> The agent is **PROHIBITED** from deleting backup branches automatically. It **MUST** remain a separate, explicit user authorization step.
-
----
-
-## Scope Coverage
-
-| Category | Convention |
-|---|---|
-| File removal from commit | Restore from parent via `git checkout HEAD~1 --` |
-| File addition to commit | Stage and amend |
-| Content modification | Edit, stage, and amend |
-| Binary removal | `git rm --cached` and amend |
-| Author correction | Edit and amend with `--author="..." --no-edit` |
-| Message-only edit | `git commit --amend -m` |
-| Descendant preservation | Automatic replay via `git rebase --continue` |
-
----
-
-## Prohibited Behaviors
-
-The agent is **BLOCKED** from:
-
-- **Deleting backup branches automatically** — Requires explicit user authorization
-- **Skipping the backup steps** — Mandatory before any destructive local rebase or remote force-push
-- **Starting rebase without user confirmation** — The edit plan MUST
-  be presented and approved first
-- **Pushing changes automatically** — The agent MUST NOT execute `git push` or `git push --force-with-lease` without explicit user authorization, even if the rebase was successful.
-- **Editing without stashing first** — If the working tree is dirty,
-  stash MUST precede rebase
-- **Skipping conflicted descendants without confirmation** — Empty
-  commits after edit require user approval to skip
-- **Leaving temporary files** — Cleanup is mandatory (`_rebase_editor.ps1`,
-  etc.)
-- **Assuming commit position** — Always verify the commit hash and its
-  position with `git log` before proceeding
-- **Using `git reset --hard`** — Use `git checkout HEAD~1 -- <files>`
-  for targeted file restoration, never hard reset
-
-## Common Pitfalls
-
-| Pitfall | Solution |
-|---|---|
-| Dirty working tree prevents rebase | Stash first with descriptive message; restore after rebase completes |
-| Rebase editor script not picked up | Verify `GIT_SEQUENCE_EDITOR` env var is set correctly; use absolute path on Windows |
-| Wrong commit marked as `edit` | Verify with `git log --oneline -1` after rebase stops; abort with `git rebase --abort` if wrong |
-| Descendant commit conflicts after file removal | Resolve conflict or skip if the descendant's changes to removed files are also noise |
-| Forgot to clean up temp script | Always run `Remove-Item` for `_rebase_editor.ps1` after rebase completes or aborts |
-| Stash pop conflicts with replayed commits | Resolve manually, `git add`, then `git stash drop` |
-| Amended commit has unexpected file count | Compare `git show --stat HEAD` against the pre-edit plan; re-amend if needed |
-| `Deletion of directory failed` during rebase | Answer `n` to retry prompt — Git will proceed; the directory is cleaned up later |
-| Force push overwrites teammate's work | Always use `--force-with-lease` instead of `--force` to prevent overwriting unknown remote commits |
+- **Git History Refinement**: [../git_history_refinement/SKILL.md](../git_history_refinement/SKILL.md)
+- **Git Atomic Commit**: [../git_atomic_commit/SKILL.md](../git_atomic_commit/SKILL.md)
+- **Standardization Rules**: [ai-rule-standardization-rules.md](../../../ai-agent-rules/ai-rule-standardization-rules.md)

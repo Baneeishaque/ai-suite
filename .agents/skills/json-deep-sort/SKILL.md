@@ -8,24 +8,21 @@ category: Data Processing
 
 ## 1. Scope Statement
 
-This skill establishes the standard protocol for autonomously scanning, parsing, and deep-sorting JSON configuration
-files natively via a pure Python script. It guarantees that any array composed purely of primitives (strings, ints,
-booleans) is sorted alphabetically, while recursively applying `sort_keys=True` to guarantee identical alphabetic
-sorting across all nested dictionaries internally.
+This skill establishes the standard protocol for autonomously scanning, parsing, and deep-sorting JSON configuration files natively via a pure Python script. It guarantees that any array composed purely of primitives (strings, ints, booleans) is sorted alphabetically, while recursively applying `sort_keys=True` to guarantee identical alphabetic sorting across all nested dictionaries internally.
 
-It explicitly bypasses third-party npm packages (like `jq` or `prettier`), providing an industrial, ultra-lean
-fallback mechanism relying exclusively on native Python structures.
+It explicitly bypasses third-party npm packages (like `jq` or `prettier`), providing an industrial, ultra-lean fallback mechanism relying exclusively on native Python structures.
 
 ***
 
 ## 2. Environment & Dependencies
 
-Before execution, the agent MUST verify:
+Before execution, the agent MUST verify the following:
 
-- **Python Verification**: Ensure python is available natively (`python --version` or `python3 --version`). Minimum
-  required version is Python 3.7 (which natively guarantees dictionary insertion order stability).
-- **No External Packages**: This script executes entirely natively using standard built-in libraries (`json`, `sys`).
-  No `pip install` required.
+| Requirement | Minimum Version | Verification Command |
+|---|---|---|
+| `python` | 3.7+ | `python --version` or `python3 --version` |
+
+- **No External Packages**: This script executes entirely natively using standard built-in libraries (`json`, `sys`). No `pip install` required.
 
 ***
 
@@ -63,26 +60,36 @@ for fp in sys.argv[1:]:
 ' "path/to/target1.json" "path/to/target2.json"
 ```
 
-### 3.1 Deep Command Explanation Mandate
+### 3.1 Deep Command Explanation
 
 The exact semantic logic broken down block by block:
 
 - `import json` / `import sys`: Invokes native system parsing capabilities bypassing external binaries.
 - `sort_arrays(data)`: A recursive interceptor actively tracking the exact current datatype boundary natively.
 - `if isinstance(data, dict)`: Dictates recursive drilling; immediately parses all sub-paths without mutating.
-- `if isinstance(data, list)`: Validates that the list acts as a primitive holder (no deeply nested arbitrary
-  objects) to prevent breaking syntax layouts unrecoverably.
-- `sorted(data, key=lambda x: str(x).lower())`: Maps explicitly case-insensitive alphabetical bounds uniformly
-  across arbitrary elements.
-- `json.dump(..., sort_keys=True)`: Overrides standard output buffers explicitly enforcing immediate nested
-  dictionary key sorting implicitly globally.
+- `if isinstance(data, list)`: Validates that the list acts as a primitive holder (no deeply nested arbitrary objects) to prevent breaking syntax layouts unrecoverably.
+- `sorted(data, key=lambda x: str(x).lower())`: Maps explicitly case-insensitive alphabetical bounds uniformly across arbitrary elements.
+- `json.dump(..., sort_keys=True)`: Overrides standard output buffers explicitly enforcing immediate nested dictionary key sorting implicitly globally.
 
 ***
 
 ## 4. Execution Protocol
 
-1. **Locate JSON Path(s)**: Identify correctly formatted JSON payloads. Check for block comments (`//`) which break
-   native Python JSON parsers and fail execution.
-2. **Execute Python Inline**: Run the target script referencing absolute boundaries structurally via `.argv`.
-3. **Verify Standard Reformatting**: Read the resulting file back explicitly via `view_file` to guarantee standard
-   indentions (4 spaces) match structural intent flawlessly.
+1.  **Locate JSON Path(s)**: Identify correctly formatted JSON payloads. Check for block comments (`//`) which break native Python JSON parsers and fail execution.
+2.  **Execute Python Inline**: Run the target script referencing absolute boundaries structurally via `.argv`.
+3.  **Verify Standard Reformatting**: Read the resulting file back explicitly via `view_file` to guarantee standard indentions (4 spaces) match structural intent flawlessly.
+
+***
+
+## 5. Prohibited Behaviors
+
+- **No external dependencies**: Do NOT use `jq`, `prettier`, or any `npm` package for sorting.
+- **No comment stripping**: Do NOT run this on JSON with comments (`JSONC`) as the native parser will fail and potentially corrupt the file if not handled.
+- **No unvalidated output**: Always verify the resulting file's structure after execution.
+
+***
+
+## 6. Related Conversations & Traceability
+
+- **Skill Factory Protocol**: [.agents/skills/skill_factory/SKILL.md](../skill_factory/SKILL.md)
+- **Standardization Rules**: [ai-rule-standardization-rules.md](../../../ai-agent-rules/ai-rule-standardization-rules.md)

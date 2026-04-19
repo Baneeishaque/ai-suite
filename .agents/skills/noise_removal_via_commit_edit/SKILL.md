@@ -12,327 +12,91 @@ category: Git & Repository Management
 > **Version:** 1.0.0
 > **Standard:** [Agent Skills (agentskills.io)](https://agentskills.io)
 
-## Description
+# IDE Noise Removal via Commit Edit Skill
 
-Detect and remove IDE artifact noise from **existing commits** using
-the [`commit_edit`](../commit_edit/SKILL.md) skill as the execution
-mechanism. This skill is a specialized layer that adds noise detection,
-classification, tracked-vs-untracked safety analysis, and mandatory
-user confirmation on top of the general commit edit workflow.
+## 1. Scope Statement
 
-IDE tooling (VS Code JDT Language Server, Eclipse m2e, IntelliJ)
-frequently auto-injects boilerplate into project metadata files
-(`.project`, `.classpath`, `.settings/`). When these changes are
-accidentally committed alongside functional work, they pollute the
-commit history. This skill surgically removes them.
+This skill establishes the industrial protocol for detecting and removing IDE artifact noise from existing Git history. It utilizes the `commit_edit` skill as the execution backbone to surgically purge boilerplate injected by JDT Language Server, m2e, and other IDE tooling from `.project`, `.classpath`, and `.settings/` files. The protocol enforces mandatory noise classification, attribution accuracy, and user authorization gates to ensure that functional changes are preserved while repository hygiene is restored.
 
-## Source Rules & Prerequisite Skills
+***
 
-| Dependency | Role |
-|---|---|
-| [`commit_edit`](../commit_edit/SKILL.md) | Execution mechanism — interactive rebase, amend, replay |
-| [`git_atomic_commit`](../git_atomic_commit/SKILL.md) Step 3g | IDE artifact detection patterns, user confirmation workflow |
-| [`git-operation-rules.md`](../../../ai-agent-rules/git-operation-rules.md) | Stash/push/commit protocols |
+## 2. Environment & Dependencies
 
-## Prerequisites
+Before execution, the agent MUST verify the following:
 
-| Requirement | Minimum |
-|---|---|
-| VCS | Git 2.x+ |
-| Shell | PowerShell 5.1+ or Bash 4+ |
-| Access | Write access to the project repository |
-| Skills | [`commit_edit`](../commit_edit/SKILL.md) must be available |
-
-## When to Apply
-
-Apply this skill when:
-- A user asks to "remove noise from a commit" or "clean up IDE
-  artifacts from history"
-- Inspection of an existing commit reveals IDE-generated boilerplate
-  mixed with functional changes
-- `git show --stat <commit>` shows a disproportionate number of
-  `.project`, `.classpath`, or `.settings/` files alongside functional
-  changes
-- The user identifies a specific commit with IDE noise and asks to
-  edit it
-
-Do NOT apply when:
-- The noise is in the **working tree** (uncommitted) — use
-  [`git_atomic_commit`](../git_atomic_commit/SKILL.md) Step 3g instead
-- The commit needs to be fully split into multiple atomic commits — use
-  [`git_history_refinement`](../git_history_refinement/SKILL.md) instead
-- The user wants to remove noise from multiple commits across a range —
-  apply this skill iteratively, one commit at a time, starting from
-  the oldest
-
----
-
-## Step-by-Step Procedure
-
-### Step 0 — Noise Detection & Classification
-
-#### 0a — Inspect the Target Commit
-
-Show the full file list of the target commit:
-
-```powershell
-git show --stat <commit-hash>
-```
-
-#### 0b — Separate Noise from Functional Content
-
-Categorize every file in the commit into noise vs functional:
-
-```powershell
-# Count noise files (IDE metadata patterns)
-git diff --name-only <commit-hash>~1 <commit-hash> -- "*.project" | Measure-Object -Line
-git diff --name-only <commit-hash>~1 <commit-hash> -- "*.classpath" | Measure-Object -Line
-git diff --name-only <commit-hash>~1 <commit-hash> -- "*.settings/*" | Measure-Object -Line
-
-# Show functional (non-noise) content
-git show --stat <commit-hash> -- ':!*.project' ':!*.classpath' ':!*.settings'
-```
-
-#### 0c — Verify Noise Content
-
-Inspect a representative noise file to confirm it matches known IDE
-artifact patterns:
-
-```powershell
-git show <commit-hash> -- <sample-noise-file>
-```
-
-**Known IDE noise patterns:**
-
-| Pattern | Source | Content |
+| Requirement | Minimum Version | Verification Command |
 |---|---|---|
-| `maven2Builder` + `maven2Nature` in `.project` | JDT Language Server (embedded m2e) | Auto-injected when `pom.xml` detected |
-| `<filteredResources>` with `regexFilterMatcher` in `.project` | JDT Language Server | Filters `node_modules\|\.git\|__CREATED_BY_JAVA_LANGUAGE_SERVER__` |
-| Self-closing tags expanded (e.g., `<comment/>` → `<comment></comment>`) | JDT Language Server | XML reformatting of `.project` |
-| `org.eclipse.m2e.core.prefs` in `.settings/` | JDT LS m2e import | m2e workspace preferences |
-| `org.eclipse.core.resources.prefs` in `.settings/` | Eclipse workspace | Encoding preferences |
+| `git` | 2.x+ | `git --version` |
+| Shell | PowerShell 5.1+ or Bash 4+ | `$PSVersionTable` or `bash --version` |
+| Skill | `commit_edit` | `view_file <path_to_commit_edit/SKILL.md>` |
 
-#### 0d — Attribution Accuracy
+***
 
-Correctly attribute the noise source. The agent **MUST NOT** claim
-that `.project` modifications come from the VS Code Maven extension
-(`vscjava.vscode-maven`). The Maven UI extension provides only the
-explorer and goal execution interface. The `.project` and `.classpath`
-modifications are injected by the **Eclipse JDT Language Server**
-(`eclipse.jdt.ls`), which bundles **m2e** (Eclipse's Maven integration)
-internally.
+## 3. Protocol Layers
 
----
+The protocol is organized into five operational phases.
 
-### Step 1 — Mandatory User Confirmation
+### 3.1 Phase 1: Noise Classification & Attribution
 
-The agent **MUST** present the noise analysis to the user and obtain
-explicit confirmation before proceeding. This is non-negotiable because
-some projects intentionally track IDE metadata.
+1.  **Commit Inspection**: Run `git show --stat <commit>` to identify suspicious metadata modifications.
+2.  **Separation**: Partition files into `Noise` (IDE boilerplate) and `Functional` (feature logic) categories.
+3.  **Attribution**: Correctly identify the source (e.g., JDT Language Server m2e injection) to provide pedagogical context.
 
-#### 1a — Present the Noise Report
+### 3.2 Phase 2: Authorization Gate (Mandatory)
 
-````markdown
-## IDE Noise Detected in Commit `<short-hash>`
+1.  **Noise Report**: Present a categorized table of noise vs functional files to the user.
+2.  **Impact Analysis**: Explicitly warn if removing metadata might break shared workspace configurations.
+3.  **Explicit Consent**: Obtain a `yes` or `no` before initiating any history-altering operations.
 
-**Commit:** `<short-hash>` — `<commit message>`
-**Date:** <commit date>
+### 3.3 Phase 3: Surgical Execution
 
-### Noise Files (<count> files)
-| # | File | Noise Type |
-|---|---|---|
-| 1 | `com.bosch.example/.project` | m2e builder/nature injection |
-| 2 | `com.bosch.example2/.project` | m2e builder/nature injection |
-| ... | ... | ... |
+1.  **Interactive Rebase**: Initiate `git rebase -i <commit>~1` and mark the target as `edit`.
+2.  **Restoration**: Restore noise files to their state in the parent commit using `git checkout HEAD~1 -- <file>`.
+3.  **Mixed-File Handling**: If a file contains both noise and functional changes, use hunk-based staging to preserve the latter.
 
-### Functional Files (<count> files, preserved)
-| # | File | Change |
-|---|---|---|
-| 1 | `src/Main.java` | +35 lines (feature logic) |
-| 2 | `docs/SETUP.md` | +82 lines (documentation) |
-| ... | ... | ... |
+### 3.4 Phase 4: Fidelity Verification
 
-### Summary
-- **Before edit:** <total> files changed, +<additions> / −<deletions>
-- **After edit:** <functional-count> files changed (noise removed)
-- **Noise removed:** <noise-count> files
+1.  **Staged Audit**: Run `git diff --cached --stat` to ensure only functional changes remain.
+2.  **Amending**: Finalize the edit with `git commit --amend --no-edit` (or reword if needed).
+3.  **Replay**: Complete the rebase and verify successful descendant replay.
 
-### Proposed discard command:
-```powershell
-git checkout HEAD~1 -- $(git diff --name-only HEAD~1 HEAD -- "*.project")
-```
+### 3.5 Phase 5: Post-Edit Hygiene
 
-**⚠️ Warning:** If this project intentionally tracks `.project` files
-for shared workspace configuration, removing these changes may break
-the intended project setup for other developers.
+1.  **Tree Parity**: Run a final `git show --stat` on the new commit and compare against the pre-edit functional list.
+2.  **Graph Verification**: Confirm the new commit is correctly integrated into the history graph.
+3.  **Reporting**: Present a final summary of modified hashes and removed files.
 
-Proceed with noise removal? (yes / no / inspect further)
-````
+***
 
-#### 1b — Act on User Feedback
+## 4. Deep Command Explanation
 
-- **"yes"** — Proceed to Step 2 (execute the commit edit).
-- **"no"** — Abort. Do not modify the commit.
-- **"inspect further"** — Show full diffs for specific noise files
-  so the user can confirm each one:
-  ```powershell
-  git show <commit-hash> -- "<specific-file>"
-  ```
-- **Partial removal** — If the user identifies only some files as
-  noise, adjust the removal list accordingly.
+### 4.1 `git show --stat <commit> -- ':!*.project' ':!*.classpath'`
+- `:!*.project`: The `!` prefix in the pathspec excludes files matching the pattern.
+- This command isolates the functional changes in a commit by filtering out known IDE noise patterns, allowing for a focused audit.
 
----
+### 4.2 `git checkout HEAD~1 -- <path>`
+- Restores the file at `<path>` to its state as of the parent commit (`HEAD~1`).
+- This is the standard mechanism for "undoing" changes to specific files within an interactive rebase session before amending.
 
-### Step 2 — Execute Commit Edit
+### 4.3 `git diff --name-only <commit>~1 <commit> -- "*.settings/*"`
+- Identifies all files modified within the `.settings/` directory in a specific commit.
+- Used for rapid noise discovery without the overhead of viewing full diffs.
 
-Delegate to the [`commit_edit`](../commit_edit/SKILL.md) skill for
-the actual rebase operation. The steps are:
+***
 
-#### 2a — Stash (if needed)
+## 5. Prohibited Behaviors
 
-Per [`commit_edit`](../commit_edit/SKILL.md) Step 1.
+- **No auto-removal**: Never remove noise without presenting a Noise Report and obtaining user authorization.
+- **No bulk deletion of mixed files**: If a `.project` file contains functional settings, use `git add -p` for surgical removal.
+- **No misattribution**: Never claim `.project` changes come from `vscjava.vscode-maven`; they are injected by `eclipse.jdt.ls`.
+- **No batch editing**: Edit one commit per rebase session to minimize conflict risk and maintain atomic history control.
+- **No skipping parity checks**: Always verify that the functional line counts match the pre-edit state.
 
-#### 2b — Interactive Rebase
+***
 
-Per [`commit_edit`](../commit_edit/SKILL.md) Step 2.
+## 6. Related Conversations & Traceability
 
-#### 2c — Remove Noise Files
-
-Once the rebase stops at the target commit, restore all noise files
-to their parent's version:
-
-```powershell
-# Remove all .project noise
-git checkout HEAD~1 -- $(git diff --name-only HEAD~1 HEAD -- "*.project")
-
-# Remove all .classpath noise (if applicable)
-git checkout HEAD~1 -- $(git diff --name-only HEAD~1 HEAD -- "*.classpath")
-```
-
-**Granular removal** (when only some `.project` files are noise):
-
-```powershell
-git checkout HEAD~1 -- "path/to/noise/.project" "other/path/.project"
-```
-
-#### 2d — Verify Noise Removal
-
-Before amending, confirm only functional changes remain staged:
-
-```powershell
-# Confirm noise files are gone
-git diff --cached --stat -- "*.project" | Select-Object -Last 1
-
-# Confirm functional files are untouched
-git show --stat HEAD -- ':!*.project' ':!*.classpath'
-```
-
-#### 2e — Amend, Continue, Restore
-
-Per [`commit_edit`](../commit_edit/SKILL.md) Steps 4–7.
-
----
-
-### Step 3 — Post-Edit Verification
-
-#### 3a — Tree Parity Check
-
-Verify that the non-noise content of the edited commit is **identical**
-to the original. The edit should have changed ONLY the noise files:
-
-```powershell
-# Compare file count
-git show --stat <new-hash> -- ':!*.project' ':!*.classpath'
-```
-
-The functional file count and line changes MUST match the pre-edit
-analysis from Step 0b.
-
-#### 3b — Descendant Integrity
-
-Verify all descendant commits were replayed successfully:
-
-```powershell
-git log --oneline <new-hash>..HEAD
-```
-
-The count must match the pre-edit descendant count from
-[`commit_edit`](../commit_edit/SKILL.md) Step 0c.
-
-#### 3c — Report Results
-
-Present the final summary to the user:
-
-```markdown
-## Noise Removal Complete
-
-**Edited commit:** `<new-hash>` (was `<old-hash>`)
-**Before:** <total> files changed, +<old-additions> / −<old-deletions>
-**After:** <functional-count> files changed, +<new-additions> / −<new-deletions>
-**Noise removed:** <count> files (<type> pattern)
-**Descendants replayed:** <count> (all successful)
-**Branch divergence:** Force push required (if applicable)
-```
-
----
-
-## Iterative Application
-
-When multiple commits in a range contain noise, apply this skill
-**iteratively starting from the oldest commit**. This minimizes
-conflict risk during descendant replay:
-
-1. Identify all noisy commits:
-   ```powershell
-   git log --oneline --all -- "*.project" | Select-Object -First 20
-   ```
-
-2. Edit the oldest noisy commit first.
-
-3. After rebase completes, re-identify remaining noisy commits (their
-   hashes will have changed due to the rebase).
-
-4. Repeat until all noisy commits are clean.
-
----
-
-## Scope Coverage
-
-| Category | Convention |
-|---|---|
-| m2e builder/nature injection | Restore `.project` from parent commit |
-| `<filteredResources>` blocks | Restore `.project` from parent commit |
-| XML tag reformatting | Restore `.project` from parent commit |
-| `.classpath` lib entries (auto-added) | Restore `.classpath` from parent commit |
-| `.settings/` m2e/resources prefs | Restore from parent commit |
-| Mixed noise + functional in `.project` | Hunk-based staging after parent restore, then re-add functional hunks |
-
----
-
-## Prohibited Behaviors
-
-The agent is **BLOCKED** from:
-
-- **Auto-removing noise without user confirmation** — The noise report
-  and user approval are mandatory, even when the pattern is obvious
-- **Misattributing noise source** — Never claim `.project` changes
-  come from `vscjava.vscode-maven`; they come from JDT Language Server
-  (embedded m2e)
-- **Removing files the project intentionally tracks** — If `.project`
-  files contain functional configuration mixed with noise, use
-  hunk-based staging, not wholesale file restoration
-- **Editing multiple commits in a single rebase** — Edit one commit
-  per rebase session to minimize conflict risk
-- **Skipping the tree parity check** — Post-edit verification is
-  mandatory to ensure functional content was not accidentally altered
-
-## Common Pitfalls
-
-| Pitfall | Solution |
-|---|---|
-| All `.project` files removed but some had functional changes mixed in | Inspect a sample diff before bulk removal; use hunk-based staging for mixed files |
-| Assumed `.project` noise came from VS Code Maven extension | Attribute correctly: JDT Language Server bundles m2e internally |
-| Edited newest commit first in a multi-commit cleanup | Always start from the oldest noisy commit to minimize replay conflicts |
-| Functional `.classpath` entries (e.g., TUL lib paths) removed as noise | The `.classpath` may contain both noise (m2e container) and functional (lib paths); inspect before removing |
-| Descendant count mismatch after rebase | A descendant may have become empty (its only changes were to noise files); confirm with user before skipping |
-| Post-edit file count doesn't match pre-edit functional count | Re-inspect the amended commit; some functional files may have been accidentally restored to parent state |
+- **Git Commit Edit**: [../commit_edit/SKILL.md](../commit_edit/SKILL.md)
+- **Git Atomic Commit**: [../git_atomic_commit/SKILL.md](../git_atomic_commit/SKILL.md)
+- **Git History Refinement**: [../git_history_refinement/SKILL.md](../git_history_refinement/SKILL.md)
+- **Standardization Rules**: [ai-rule-standardization-rules.md](../../../ai-agent-rules/ai-rule-standardization-rules.md)

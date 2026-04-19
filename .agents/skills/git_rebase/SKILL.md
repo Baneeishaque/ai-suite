@@ -12,231 +12,95 @@ category: Git & Repository Management
 > **Version:** 1.0.0
 > **Standard:** [Agent Skills (agentskills.io)](https://agentskills.io)
 
-## Description
+# Git Rebase Standardization Skill
 
-Manage complex, multi-branch Git rebases with hierarchical alignment,
-cross-branch deduplication, and absolute commit fidelity. This skill
-covers dependency mapping via Mermaid graphs, Commit Action Mapping
-(CAM) tables, the "Dig Down" content analysis principle, literal
-execution protocols, and operational guardrails.
+## 1. Scope Statement
 
-This skill is invoked for complex rebase operations involving multiple
-branches or chain rebasing. For constructing new commits, use
-[`git_atomic_commit`](../git_atomic_commit/SKILL.md). For splitting
-existing commits, use
-[`git_history_refinement`](../git_history_refinement/SKILL.md).
+This skill establishes the industrial protocol for managing complex, multi-branch Git rebases. It ensures hierarchical alignment, cross-branch commit deduplication, and absolute historical fidelity. The protocol leverages Mermaid dependency mapping, Commit Action Mapping (CAM) tables, and the "Dig Down" content analysis principle to guarantee that rebase operations are predictable, non-regressive, and documented with high technical precision.
 
-## Source Rules
+***
 
-| Rule File | Scope Incorporated |
-|---|---|
-| [`git-rebase-standardization-rules.md`](../../../ai-agent-rules/git-rebase-standardization-rules.md) | All sections (primary source) |
+## 2. Environment & Dependencies
 
-## Prerequisites
+Before execution, the agent MUST verify the following:
 
-| Requirement | Minimum |
-|---|---|
-| VCS | Git 2.x+ |
-| Shell | PowerShell 5.1+ or Bash 4+ |
-| Access | Write access to the project repository |
-
-## When to Apply
-
-Apply this skill when:
-- A user asks to rebase a branch or chain of branches
-- Multiple feature branches need hierarchical alignment against a base
-- Cross-branch commit deduplication is needed
-- A rebase plan requires visualization and commit categorization
-- The user asks to "clean up branch history" involving multiple branches
-
-Do NOT apply when:
-- The task is constructing new commits from uncommitted changes — use
-  [`git_atomic_commit`](../git_atomic_commit/SKILL.md)
-- The task is splitting a single existing commit — use
-  [`git_history_refinement`](../git_history_refinement/SKILL.md)
-- A simple `git rebase` onto one target with no chain complexity
-
----
-
-## Step-by-Step Procedure
-
-### Step 1 — Hierarchical Dependency Mapping
-
-Before any rebase execution, map branch dependencies using a Mermaid
-graph. This serves as the architectural blueprint.
-
-#### 1a — Dependency Visualization
-
-Every complex rebase plan MUST include a `mermaid` diagram defining:
-
-- **Base Anchor:** The target branch (e.g., `main` or `origin/main`)
-- **Chain Segments:** Groupings of branches by concern (Foundation,
-  Logic, Tooling)
-- **Branch Relationships:** Clear directional arrows showing the rebase
-  path
-
-```mermaid
-graph LR
-    A[origin/main] --> B[foundation/setup]
-    B --> C[feature/auth]
-    B --> D[feature/api]
-    C --> E[tooling/ci]
-```
-
-#### 1b — Discover Default Branch
-
-Do NOT assume the default branch name. Discover it programmatically:
-
-```powershell
-git branch -r
-```
-
----
-
-### Step 2 — Commit Action Mapping (CAM)
-
-Categorize every significant commit in the chain using a CAM table.
-
-| Action | Definition | Constraint |
+| Requirement | Minimum Version | Verification Command |
 |---|---|---|
-| **KEEP** | Functional changes unique to the branch | Verify no duplication in parent branches |
-| **REWORD** | Commit requires better fidelity or "Dig Down" details | MUST include literal message payload in plan |
-| **DROP** | Commit is redundant or already present in a parent | State the specific redundant SHA or logic |
-| **SQUASH** | Related commits merged for atomicity | Title MUST follow Conventional Commits |
+| `git` | 2.x+ | `git --version` |
+| Shell | PowerShell 5.1+ or Bash 4+ | `$PSVersionTable` or `bash --version` |
 
-Present the CAM table to the user for approval before executing any
-rebase operations.
+***
 
----
+## 3. Protocol Layers
 
-### Step 3 — The "Dig Down" Fidelity Principle
+The protocol is organized into six operational phases.
 
-For every **REWORD** action — especially involving binary, LFS, or
-complex config files — the agent MUST "dig down" into the content.
+### 3.1 Phase 1: Hierarchical Dependency Mapping
 
-- **Content Analysis:** Inspect the actual hunk or blob (e.g., `cat -v`,
-  `jq`, or `file` analysis)
-- **Explicit Mention:** The commit body MUST list specific package
-  changes, configuration keys, or binary assets added/modified
-- **Rationale:** Explain *why* these specific changes were grouped
-  together or why they are critical for the branch context
+1.  **Discovery**: Run `git branch -r` to identify default branches and remotes.
+2.  **Blueprint**: Construct a Mermaid diagram defining base anchors (e.g., `origin/main`), chain segments (Foundation, Logic, Tooling), and directional rebase paths.
 
----
+### 3.2 Phase 2: Commit Action Mapping (CAM)
 
-### Step 4 — Literal Execution Protocol (SSOT)
+1.  **Categorization**: Assign every commit in the chain to an action: `KEEP`, `REWORD`, `DROP`, or `SQUASH`.
+2.  **Deduplication**: Identify and `DROP` redundant commits present in parent branches.
+3.  **Authorization Gate**: Present the CAM table to the user for explicit approval.
 
-Implementation plans for history-altering operations MUST be Single
-Source of Truth (SSOT) and exhaustive.
+### 3.3 Phase 3: "Dig Down" Fidelity Audit
 
-- **Exact Commands:** Include the literal CLI commands (e.g.,
-  `git rebase --onto <newbase> <upstream> <branch>`)
-- **Literal Payloads:** Message bodies MUST be provided as literal
-  strings to prevent "hallucination" during execution
-- **Atomic Hygiene:** Every step MUST include necessary cleanup commands
+1.  **Analysis**: For `REWORD` actions, inspect actual hunks or blobs (e.g., `cat -v`, `jq`).
+2.  **Metadata Synthesis**: Construct commit messages that list specific package changes, config keys, or binary assets.
 
----
+### 3.4 Phase 4: Safety & Baseline Initialization
 
-### Step 5 — Execution
+1.  **Backup**: Create `backup/pre-rebase-<n>` using incremental naming.
+2.  **Alignment**: Run `git fetch origin` to ensure synchronization.
 
-Execute the rebase according to the approved plan.
+### 3.5 Phase 5: Rebase Execution
 
-#### 5a — Backup Before Rebase
+1.  **SSOT Command**: Execute `git rebase --onto <newbase> <upstream> <branch>` or `git rebase -i`.
+2.  **Guardrail**: Never skip empty commits (`git rebase --skip`) without user confirmation.
 
-Create a backup branch before any destructive operation (per the
-[`git_history_refinement`](../git_history_refinement/SKILL.md) backup
-protocol):
+### 3.6 Phase 6: Verification & Cleanup
 
-```powershell
-git branch backup/pre-rebase-<n>
-```
+1.  **Tree Parity**: Run `git diff HEAD <backup-branch>` to ensure no content was lost.
+2.  **Graph Audit**: Verify the resulting history via `git log --oneline --graph`.
+3.  **Hygiene**: Perform `git gc --prune=now` and request authorization to delete backups.
 
-#### 5b — Rebase Command
+***
 
-```powershell
-git rebase --onto <newbase> <upstream> <branch>
-```
+## 4. Deep Command Explanation
 
-For interactive rebase with CAM actions:
+### 4.1 `git rebase --onto <newbase> <upstream> <branch>`
+- `--onto <newbase>`: The new base for the branch.
+- `<upstream>`: The old base (the commits to be excluded).
+- `<branch>`: The branch being rebased.
+- This command allows "transplanting" a segment of history from one base to another, effectively skipping intermediate base commits that may have changed.
 
-```powershell
-git rebase -i <base-commit>
-```
+### 4.2 `git log --oneline --graph`
+- Provides a compact, visual representation of the commit graph.
+- Critical for verifying that the hierarchical rebase correctly aligned branches according to the Mermaid blueprint.
 
-Apply KEEP, REWORD, DROP, SQUASH actions as specified in the CAM table.
+### 4.3 `git gc --prune=now`
+- `gc`: Garbage collection.
+- `--prune=now`: Immediately removes unreachable objects from the repository.
+- Used for repository hygiene after large history rewrites to keep the `.git` directory lean and optimized.
 
-#### 5c — Empty Commit Guardrail
+***
 
-The agent is **PROHIBITED** from skipping empty commits
-(`git rebase --skip`) without explicit user confirmation.
+## 5. Prohibited Behaviors
 
----
+- **No rebasing without backups**: Backup branches are mandatory for all destructive operations.
+- **No silent skipping**: Every `git rebase --skip` requires a user authorization gate.
+- **No generic rewording**: Commit messages must use "Dig Down" fidelity for specific change lists.
+- **No force-moving backups**: Never use `git branch -f` for backups; use incremental naming.
+- **No assuming branch names**: Always discover the default branch programmatically.
 
-### Step 6 — Operational Verification & Guardrails
+***
 
-#### 6a — Rebase-Reset Recovery
+## 6. Related Conversations & Traceability
 
-If a reword accidentally applies to the wrong branch (detected via
-`git status` or `git log`):
+- **Git Atomic Commit**: [../git_atomic_commit/SKILL.md](../git_atomic_commit/SKILL.md)
+- **Git History Refinement**: [../git_history_refinement/SKILL.md](../git_history_refinement/SKILL.md)
+- **Standardization Rules**: [ai-rule-standardization-rules.md](../../../ai-agent-rules/ai-rule-standardization-rules.md)
 
-1. **Stop immediately**
-2. **Reverse using Reflog:** identify the clean state and
-   `git reset --hard` back to it
-3. **Re-execute** from the correct branch
-
-#### 6b — Post-Operation Hygiene
-
-After every successfully completed branch rebase:
-
-1. **Garbage Collection:**
-   ```powershell
-   git gc --prune=now
-   ```
-2. **Tag Cleanup:** Delete temporary backup tags created for the
-   operation
-3. **Graph Verification:**
-   ```powershell
-   git log --oneline --graph -n 5
-   ```
-
-#### 6c — Tree Parity Verification
-
-Compare the final rebased state against the backup to ensure no content
-was lost:
-
-```powershell
-git diff HEAD <backup-branch>
-```
-
-Expected: Empty diff.
-
----
-
-## Prohibited Behaviors
-
-The agent is **BLOCKED** from:
-
-- **Rebasing without a backup branch** — Mandatory before any
-  destructive operation
-- **Skipping empty commits without user confirmation** — Every skip
-  requires explicit approval
-- **Assuming the default branch name** — Must discover programmatically
-- **Using generic REWORD messages** — Must "dig down" into content for
-  fidelity
-- **Executing rebase without CAM table approval** — User must review and
-  approve the categorization
-- **Force-moving backup branches** — Use incremental naming, never `-f`
-- **Omitting literal command payloads from plans** — Plans must be SSOT
-  with exact commands and message strings
-
-## Common Pitfalls
-
-| Pitfall | Solution |
-|---|---|
-| Reword applied to wrong branch | Stop, reverse via reflog, re-execute from correct branch |
-| Empty commit during rebase | Do NOT skip without asking user — may indicate a logic error |
-| Cross-branch duplicate commits | Use CAM table to identify and DROP redundant commits |
-| Backup branch overwritten | Use incremental naming (`-1`, `-2`, `-3`) |
-| Assumed `main` but repo uses `master` | Discover default branch via `git branch -r` |
-| Rebase plan hallucinated commit messages | Provide literal payloads in the plan — never generate at execution time |
-| Graph integrity broken after chain rebase | Run `git log --oneline --graph` and verify against the Mermaid blueprint |
-| Binary file commit message says "update file" | "Dig down" — inspect blob content and list specific changes |

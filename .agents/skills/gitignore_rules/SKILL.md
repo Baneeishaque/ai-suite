@@ -10,295 +10,93 @@ category: Git & Version Control
 > **Version:** 1.0.0
 > **Standard:** [Agent Skills (agentskills.io)](https://agentskills.io)
 
-## Description
+# Gitignore Rules Skill
 
-Audit `.gitignore` files for structural errors and common pitfalls that
-cause rules to silently fail. The most critical pattern this skill
-detects is the **directory-ignore + negation failure**: when a directory
-is ignored with a trailing slash (`dir/`), Git stops descending into it
-entirely, so any negation patterns (`!dir/*.ext`) that follow are
-**silently ignored** — the intended files are never tracked.
+## 1. Scope Statement
 
-This skill scans for these and other pitfalls, applies safe fixes,
-and verifies correctness using `git check-ignore`.
+This skill establishes the industrial protocol for auditing and fixing `.gitignore` files. It identifies structural errors and silent failures, specifically targeting the "directory-ignore + negation" pitfall where Git stops descending into directories, rendering subsequent negation patterns useless. The protocol includes automated detection logic, structural transformation rules (`dir/` → `dir/*`), and mandatory verification using `git check-ignore` to ensure intended files are correctly tracked.
 
-## Prerequisites
+***
 
-| Requirement | Minimum |
-|---|---|
-| VCS | Git 2.x+ |
-| Shell | PowerShell 5.1+ or Bash 4+ |
-| Access | Write access to the repository |
+## 2. Environment & Dependencies
 
-## When to Apply
+Before execution, the agent MUST verify the following:
 
-Apply this skill when:
-
-- A user asks to review, audit, or fix `.gitignore` rules
-- A user reports that ignored files are not being tracked despite negation patterns
-- A user adds new `.gitignore` rules with directory ignores and negations
-- `git status` does not show files the user expects to be tracked
-- A new `.gitignore` is being created with selective ignore/track patterns
-
-Do NOT apply when:
-
-- The user explicitly wants to ignore an entire directory with no exceptions
-- The `.gitignore` contains only simple file-pattern rules (no negations)
-- The user says "just commit it, no review needed"
-
----
-
-## Core Concept: Directory-Ignore vs Contents-Ignore
-
-This is the single most important distinction in `.gitignore`:
-
-| Pattern | Git Behavior | Negations Work? |
+| Requirement | Minimum Version | Verification Command |
 |---|---|---|
-| `dir/` | Ignores the **directory itself** — Git will not descend into it | **No** — negations are silently ignored |
-| `dir/*` | Ignores all **contents** of the directory — Git still enters it | **Yes** — negations are evaluated |
+| `git` | 2.x+ | `git --version` |
+| Shell | PowerShell 5.1+ or Bash 4+ | `$PSVersionTable` or `bash --version` |
 
-### Why This Matters
+***
 
-```gitignore
-# BROKEN — negation silently fails
-pevers/
-!pevers/*.zip
+## 3. Protocol Layers
 
-# FIXED — negation works correctly
-pevers/*
-!pevers/*.zip
-```
+The protocol is organized into six operational phases.
 
-In the broken example, Git sees `pevers/` and skips the entire directory.
-It never reads the `!pevers/*.zip` line. The `.zip` files are ignored
-along with everything else. **No warning or error is produced.**
+### 3.1 Phase 1: Global Discovery
 
----
+1.  **Inventory**: Find every `.gitignore` in the repository, excluding standard noise directories (`.git`, `node_modules`, `target`, `dist`).
+2.  **Indexing**: List all discovered files with their relative paths.
 
-## Step-by-Step Procedure
+### 3.2 Phase 2: Structural Audit (Pitfall Detection)
 
-### Step 1 — Locate All `.gitignore` Files
+1.  **Directory-Ignore Audit**: Identify `dir/` patterns followed by `!dir/` negations.
+2.  **Order Audit**: Detect negations (`!`) appearing before the patterns they negate.
+3.  **Nesting Audit**: Verify that intermediate directories are un-ignored for deeply nested negations.
+4.  **Hygiene Audit**: Scan for trailing whitespace and redundant patterns.
 
-Find every `.gitignore` in the repository. Projects may have multiple
-`.gitignore` files at different directory levels.
+### 3.3 Phase 3: Risk Reporting
 
-**PowerShell:**
+1.  **Categorized Table**: Present all structural errors in a table: `Line | Pattern | Issue | Affected Negation`.
+2.  **Severity Warning**: Explicitly state that these are **silent failures** with zero warning from Git.
 
-```powershell
-Get-ChildItem -Recurse -Filter ".gitignore" |
-    Where-Object { $_.FullName -notmatch '\\(\.git|node_modules|target|dist)\\' } |
-    ForEach-Object { $_.FullName }
-```
+### 3.4 Phase 4: Structural Transformation
 
-**Bash:**
+1.  **Fixed Patterns**: Convert `dir/` to `dir/*` ONLY when negations are present.
+2.  **Reordering**: Move negations after their corresponding ignore patterns.
+3.  **Preservation**: Maintain all comments and original user-defined groupings.
 
-```bash
-find . -name ".gitignore" \
-    -not -path '*/.git/*' \
-    -not -path '*/node_modules/*' \
-    -not -path '*/target/*'
-```
+### 3.5 Phase 5: Verification (Mandatory)
 
-### Step 2 — Scan for Directory-Ignore + Negation Patterns
+1.  **Fidelity Check**: Run `git check-ignore -v <path>` for both intended-to-track and intended-to-ignore files.
+2.  **Visibility Check**: Run `git ls-files --others --exclude-standard <dir>` to confirm files are visible to Git.
 
-For each `.gitignore`, identify any pattern pair where:
+### 3.6 Phase 6: Maintenance & Untracking
 
-1. A directory is ignored with a trailing slash: `something/`
-2. A negation pattern targets files inside that directory: `!something/*.ext`
+1.  **Tracked Audit**: Detect files that are currently tracked but match the new `.gitignore` rules.
+2.  **Resolution**: Advise the user on `git rm --cached <file>` for previously committed files.
 
-**Detection logic (pseudocode):**
+***
 
-```
-for each line in .gitignore:
-    if line matches "^[^!#].*/$":           # directory ignore (trailing slash)
-        dir_name = extract directory name
-        scan subsequent lines for "^!{dir_name}/":
-            if found → FLAG as pitfall
-```
+## 4. Deep Command Explanation
 
-**PowerShell example:**
+### 4.1 `git check-ignore -v <path>`
+- `-v` (or `--verbose`): Outputs the pattern, line number, and filename of the `.gitignore` rule that matched.
+- This is the authoritative tool for debugging ignore rules. If it returns nothing, the file is NOT ignored.
 
-```powershell
-$lines = Get-Content ".gitignore"
-for ($i = 0; $i -lt $lines.Count; $i++) {
-    $line = $lines[$i].Trim()
-    if ($line -match '^([^!#].+)/$') {
-        $dir = $Matches[1]
-        # Check if any subsequent line negates inside this directory
-        for ($j = $i + 1; $j -lt $lines.Count; $j++) {
-            if ($lines[$j].Trim() -match "^!$dir/") {
-                Write-Warning "Line $($i+1): '$line' blocks negation on line $($j+1): '$($lines[$j].Trim())'"
-            }
-        }
-    }
-}
-```
+### 4.2 `git ls-files --others --exclude-standard`
+- `--others`: Shows untracked files.
+- `--exclude-standard`: Filters the list using standard ignore rules (`.gitignore`, `.git/info/exclude`, etc.).
+- This command proves that Git can "see" a file as a candidate for version control.
 
-### Step 3 — Flag and Report Findings
+### 4.3 `git rm --cached <file>`
+- Removes the file from the Git index (tracking) but keeps the physical file in the working tree.
+- Essential for "applying" `.gitignore` changes to files that were accidentally committed before the ignore rule existed.
 
-Present findings in a structured table:
+***
 
-| Line | Pattern | Issue | Affected Negation(s) |
-|---|---|---|---|
-| 5 | `pevers/` | Directory-ignore blocks negation | Line 6: `!pevers/*.zip` |
-| 8 | `output/` | Directory-ignore blocks negation | Line 9: `!output/*.log` |
+## 5. Prohibited Behaviors
 
-**Severity:** These are **silent failures** — Git produces no warning.
-Files the user intends to track are being ignored without any indication.
+- **No conversion without negations**: Do NOT convert `dir/` to `dir/*` if no negations exist for that directory.
+- **No silent modifications**: Every fix requires an audit report and mandatory verification.
+- **No assumption of untracked status**: Always check `git ls-files` before advising ignore changes.
+- **No reordering unrelated rules**: Only reorder when fixing a negation-before-ignore violation.
+- **No removal of user rules**: Never delete a pattern; only transform it to a functionally correct equivalent.
 
-### Step 4 — Apply the Fix
+***
 
-Convert `dir/` to `dir/*` for every flagged pattern. This changes the
-semantics from "ignore the directory" to "ignore the contents," allowing
-Git to descend into the directory and evaluate negation patterns.
+## 6. Related Conversations & Traceability
 
-**Transformation rule:**
-
-```
-BEFORE:  dir/
-AFTER:   dir/*
-```
-
-**Important constraints:**
-
-- Only apply this fix when the directory-ignore is followed by negation
-  patterns targeting that directory
-- If a directory-ignore has **no** associated negations, leave it as `dir/`
-  (it is intentionally ignoring everything)
-- Preserve all comments, blank lines, and ordering in the `.gitignore`
-
-### Step 5 — Verify with `git check-ignore`
-
-After applying fixes, verify that the intended files are no longer
-ignored and that other files remain ignored.
-
-**Verify a file is tracked (not ignored):**
-
-```powershell
-git check-ignore -v "pevers/archive.zip"
-# Expected: NO output (file is not ignored)
-```
-
-**Verify other files are still ignored:**
-
-```powershell
-git check-ignore -v "pevers/some_other_file.txt"
-# Expected: output showing the ignore rule that matches
-```
-
-**Bulk verification:**
-
-```powershell
-# List all files Git sees in the directory
-git ls-files --others "pevers/"
-
-# List all ignored files in the directory
-git ls-files --others --ignored --exclude-standard "pevers/"
-```
-
-If the negated files appear in `--others` (untracked but visible) and
-NOT in `--ignored`, the fix is working correctly.
-
-### Step 6 — Check for Additional Pitfalls
-
-Scan for these additional common `.gitignore` problems:
-
-#### 6a — Negation Before Ignore (Order Matters)
-
-```gitignore
-# BROKEN — negation comes before the ignore, has no effect
-!logs/*.important
-logs/*
-
-# FIXED — ignore first, then negate
-logs/*
-!logs/*.important
-```
-
-**Rule:** Negation patterns (`!`) must come **after** the pattern they
-are negating. `.gitignore` is processed top-to-bottom; later rules
-override earlier ones.
-
-#### 6b — Negating a File Inside a Deeply Ignored Parent
-
-```gitignore
-# BROKEN — parent directory is ignored, child negation fails
-build/
-!build/output/release.zip
-
-# FIXED — must un-ignore each level of the path
-build/*
-!build/output/
-build/output/*
-!build/output/release.zip
-```
-
-**Rule:** To negate a file in a nested path, every intermediate
-directory must also be un-ignored.
-
-#### 6c — Trailing Whitespace
-
-Lines with invisible trailing spaces can cause patterns to fail
-silently. Scan for and remove trailing whitespace:
-
-```powershell
-# Detect trailing whitespace
-Get-Content ".gitignore" | ForEach-Object { $n++; if ($_ -match '\s+$') {
-    "Line ${n}: trailing whitespace detected"
-}}
-```
-
-#### 6d — Already-Tracked Files
-
-`.gitignore` only affects **untracked** files. If a file was previously
-committed, adding it to `.gitignore` will NOT remove it from tracking.
-
-```powershell
-# Remove a file from Git tracking (keep local copy)
-git rm --cached "path/to/file"
-```
-
----
-
-## Scope Coverage
-
-| Pattern Type | Audited? | Fix Applied? |
-|---|---|---|
-| `dir/` + `!dir/*.ext` (directory-ignore + negation) | Yes | `dir/` → `dir/*` |
-| Negation before ignore (wrong order) | Yes | Reorder |
-| Nested negation without intermediate un-ignore | Yes | Add intermediate patterns |
-| Trailing whitespace | Yes | Trim |
-| Already-tracked files still showing | Detected | Manual `git rm --cached` advised |
-| Redundant patterns | Detected | Reported, not auto-removed |
-
----
-
-## Prohibited Behaviors
-
-The agent is **BLOCKED** from:
-
-- **Removing user-intended ignore rules** — only structural fixes are
-  allowed; never delete a pattern the user explicitly added
-- **Changing semantics without a negation reason** — do NOT convert
-  `dir/` to `dir/*` if there are no negation patterns for that directory
-- **Modifying without verification** — Step 5 (`git check-ignore`) is
-  mandatory after every fix
-- **Assuming files are untracked** — always check with
-  `git ls-files` whether a file is already tracked before advising
-  `.gitignore` changes
-- **Reordering unrelated rules** — only reorder when fixing a
-  negation-before-ignore problem; preserve the user's original grouping
-
----
-
-## Common Pitfalls
-
-| Pitfall | Cause | Solution |
-|---|---|---|
-| Negation pattern silently ignored | `dir/` prevents Git from descending into directory | Change `dir/` to `dir/*` |
-| Negation has no effect | Negation line appears before the ignore line | Move negation **after** the ignore line |
-| Nested file cannot be negated | Parent directory is fully ignored | Un-ignore each intermediate directory level |
-| `.gitignore` change has no effect on existing file | File was previously committed and is tracked | Run `git rm --cached <file>` to untrack |
-| Pattern fails on some systems | Trailing whitespace in `.gitignore` line | Trim trailing whitespace |
-| `*.log` ignores too much | Overly broad glob in root `.gitignore` | Move pattern to a subdirectory `.gitignore` or use path-qualified pattern |
-| Double-star confusion | `**/dir` vs `dir/` vs `dir/**` have different semantics | `**/dir` matches at any depth; `dir/**` matches contents at any depth inside `dir` |
+- **Git Atomic Commit**: [../git_atomic_commit/SKILL.md](../git_atomic_commit/SKILL.md)
+- **Git History Refinement**: [../git_history_refinement/SKILL.md](../git_history_refinement/SKILL.md)
+- **Standardization Rules**: [ai-rule-standardization-rules.md](../../../ai-agent-rules/ai-rule-standardization-rules.md)
